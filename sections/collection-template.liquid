@@ -25,8 +25,10 @@
     {%- endif -%}
 
     {% if section.settings.show_collection_image and collection.image %}
-      <div class="collection-hero">
-        <div class="collection-hero__image ratio-container lazyload js"
+      {% assign collection_image_new = 'https://www.mvmt.com/on/demandware.static/-/Sites/default/dw4c9e8297/images/bannerImages/MensNecklacesDesktop.jpg' %}
+      <!-- <div class="collection-hero"> -->
+      <div class="html-slot-container">
+     <!--    <div class="collection-hero__image ratio-container lazyload js"
              data-bgset="{% include 'bgset', image: collection.image %}"
              data-sizes="auto"
              data-parent-fit="cover"
@@ -34,13 +36,27 @@
         ></div>
         <noscript>
           <div class="collection-hero__image" style="background-image: url({{ collection.image | img_url: '2048x600', crop: 'top' }});"></div>
-        </noscript>
-        <div class="collection-hero__title-wrapper">
-          <h1 class="collection-hero__title page-width">
+        </noscript> -->
+        <picture class="search-banner__picture">
+        <source media="(min-width:769px)" srcset="https://www.mvmt.com/on/demandware.static/-/Sites/default/dw4c9e8297/images/bannerImages/MensNecklacesDesktop.jpg">
+        <source media="(max-width:768px)" srcset="https://www.mvmt.com/on/demandware.static/-/Sites/default/dwaa50af4b/images/bannerImages/MensNecklacesMobile.jpg">
+        <source srcset="https://www.mvmt.com/on/demandware.static/-/Sites/default/dw4c9e8297/images/bannerImages/MensNecklacesDesktop.jpg">
+        <img alt="Mens 40 Series Watch Hero Banner" class="search-banner__image" src="https://www.mvmt.com/on/demandware.static/-/Sites/default/dw4c9e8297/images/bannerImages/MensNecklacesDesktop.jpg">
+        </picture>
+        <div class="search-banner__content">
+          <h1 class="search-banner__title">
               <span class="visually-hidden">{{ 'collections.general.collection_label' | t }}: </span>
               {{ collection.title }}
           </h1>
+          <p class="search-banner__copy">
+            {{ collection.description }}
+          </p>
         </div>
+        <div class="collection-hero-mobile-selector">
+          <div class="collection-hero-mobile-selector-inner has-list">
+            <div class="collection-mobile-group">{{ collection.title }}</div>
+            </div>
+          </div>
       </div>
       {% if is_filter_by_available == false and section.settings.sort_enable == false %}
         <div class="page-width">
@@ -48,7 +64,7 @@
         </div>
       {% endif %}
       {% if collection.description != blank %}
-        <div class="rte collection-description page-width">
+        <div class="rte collection-description page-width" style="display: none;">
           {{ collection.description }}
         </div>
       {% endif %}

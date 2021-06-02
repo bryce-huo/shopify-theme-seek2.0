@@ -1,0 +1,331 @@
+{%- assign product1 = all_products[section.settings.featured_product1] -%}
+{%- assign product2 = all_products[section.settings.featured_product2] -%}
+
+<div class="page-width" id="ProductSection-{{ section.id }}">
+  <div class="shop-section">
+    <div class="shop-section-inner">
+      <div class="shop-box">
+        <div class="shop-image">
+          <img class=" Image--lazyLoaded" data-src="//cdn.shopify.com/s/files/1/0863/0768/files/Disney_Little_Mermaid_Blanket_Lifestyle_MilkSnob900066.jpg?v=1612382807" src="//cdn.shopify.com/s/files/1/0863/0768/files/Disney_Little_Mermaid_Blanket_Lifestyle_MilkSnob900066.jpg?v=1612382807">
+        </div>
+        <div class="shop-content">
+          <h3>Our Favorite</h3>
+          <h2>Cozy Blankets</h2>
+          <a class="btn" href="/collections/blankets">Shop Now</a>
+        </div>
+      </div>
+      <div class="shop-box">
+        <div class="shop-content">
+          <h3>Get Personalized</h3>
+          <h2>Find Your Match Quiz</h2>
+          <a class="btn" href="/pages/find-your-match-quiz">Take Quiz</a>
+        </div>
+        <div class="shop-image">
+          <img class=" Image--lazyLoaded" data-src="//cdn.shopify.com/s/files/1/0863/0768/files/Star_Wars_Far_Far_Away_Cover_Lifestyle_msjan2020-10.jpg?v=1607108750" src="//cdn.shopify.com/s/files/1/0863/0768/files/Star_Wars_Far_Far_Away_Cover_Lifestyle_msjan2020-10.jpg?v=1607108750">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .shop-box {
+    width: 50%;
+    float: left;
+    background-color: #cdc9c3
+}
+
+.shop-box:last-child {
+    background-color: #d8d1c5;
+    border-left: 15px solid #fff
+}
+
+.shop-box:first-child {
+    border-right: 15px solid #fff
+}
+
+.shop-section-inner {
+    overflow: hidden;
+    /*margin-top: 30px*/
+}
+
+.shop-image {
+    display: inline-block;
+    width: 70%;
+    vertical-align: middle;
+    padding: 30px
+}
+
+.shop-content {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    width: 29%;
+    padding: 15px
+}
+
+.shop-image img {
+    height: 500px;
+    object-fit: cover
+}
+
+.shop-content h2 {
+    font-family: futura-pt,Arial,sans-serif;
+    font-size: 18px;
+    line-height: normal;
+    color: #000;
+    font-weight: 500;
+}
+
+.shop-content h3 {
+    font-family: futura-pt,Arial,sans-serif;
+    color: #000;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.shop-content a {
+    /*display: inline-block;
+    background-color: #e4beb0;
+    border-radius: 4px;
+    color: #fff;
+    padding: 10px 25px;
+    font-family: futura-pt,Arial,sans-serif;*/
+}
+
+.shop-content a:hover {
+    /*background-color: #000*/
+}
+
+.shop-heading {
+    text-align: center;
+    padding: 60px 0;
+    display: inline-block
+}
+
+.shop-heading-section {
+    text-align: center;
+    margin-top: 30px
+}
+
+.shop-heading h2 {
+    font-size: 60px;
+    text-transform: uppercase;
+    color: #e4beb0;
+    font-family: GTWalsheimProRegular;
+    letter-spacing: 6px;
+    font-weight: 600;
+    line-height: normal;
+    margin-bottom: 0
+}
+
+.shop-heading h3 {
+    font-size: 40px;
+    text-transform: uppercase;
+    color: #e4beb0;
+    font-family: GTWalsheimProRegular;
+    letter-spacing: 6px;
+    font-weight: 400;
+    line-height: normal;
+    margin-bottom: 20px
+}
+
+.shop-heading a {
+    display: inline-block;
+    color: #000;
+    font-size: 18px;
+    text-decoration: underline;
+    padding: 0 15px
+}
+@media (max-width: 480px) { 
+  .shop-content {
+    max-width: 210px!important;
+    padding: 15px!important;
+    width: 100%;
+  }
+ .shop-box:last-child .shop-content{
+    max-width: 160px;
+    left: 15px;
+    padding-left: 0;
+ }
+ .shop-box:first-child .shop-content {
+      padding-right: 0;
+      max-width: 150px;
+      left: 20px;
+  }
+}
+@media (max-width: 991px) {
+  .shop-box {
+      width: 100%;
+      background-color: unset;
+      position: relative;
+  }
+  .shop-image {
+    width: 100%;
+    position: relative;
+    padding: 0;
+  }
+  .shop-image img {
+    height: auto;
+    width: 100%;
+  }
+  .shop-content {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 60px;
+    z-index: 2;
+    background-color: #ffffffd1;
+  }
+}
+@media (max-width: 1199px) { 
+  .shop-image {
+    /*padding: 15px;*/
+  }
+  .shop-image img {
+    height: 350px;
+  }
+  .shop-box:first-child {
+    border-right: 0;
+  }
+  .shop-box:last-child {
+    border-left: 0;
+    margin-top: 30px;
+  }
+}
+</style>
+
+
+{% schema %}
+{
+  "name": {
+    "cs": "Propagovaný produkt",
+    "da": "Fremhævet produkt",
+    "de": "Vorgestelltes Produkt",
+    "en": "Featured product",
+    "es": "Producto destacado",
+    "fi": "Esittelyssä oleva tuote",
+    "fr": "Produit vedette",
+    "it": "Prodotto in primo piano",
+    "ja": "おすすめ商品",
+    "ko": "특별 상품",
+    "nb": "Utvalgt produkt",
+    "nl": "Uitgelicht product",
+    "pl": "Polecany produkt",
+    "pt-BR": "Produto em destaque",
+    "pt-PT": "Produto em destaque",
+    "sv": "Utvald produkt",
+    "th": "สินค้าที่แนะนำ",
+    "tr": "Öne çıkan ürün",
+    "vi": "Sản phẩm nổi bật",
+    "zh-CN": "特色产品2",
+    "zh-TW": "精選產品2"
+  },
+  "class": "index-section index-section--featured-product",
+  "settings": [
+    {
+      "type": "product",
+      "id": "featured_product1",
+      "label": {
+        "cs": "Produkt",
+        "da": "Produkt",
+        "de": "Produkte",
+        "en": "Product",
+        "es": "Producto",
+        "fi": "Tuote",
+        "fr": "Produit",
+        "it": "Prodotto",
+        "ja": "商品",
+        "ko": "제품",
+        "nb": "Produkt",
+        "nl": "Product",
+        "pl": "Produkt",
+        "pt-BR": "Produto",
+        "pt-PT": "Produto",
+        "sv": "Produkt",
+        "th": "สินค้า",
+        "tr": "Ürün",
+        "vi": "Sản phẩm",
+        "zh-CN": "产品1",
+        "zh-TW": "產品1"
+      }
+    },
+    {
+      "type": "product",
+      "id": "featured_product2",
+      "label": {
+        "cs": "Produkt",
+        "da": "Produkt",
+        "de": "Produkte",
+        "en": "Product",
+        "es": "Producto",
+        "fi": "Tuote",
+        "fr": "Produit",
+        "it": "Prodotto",
+        "ja": "商品",
+        "ko": "제품",
+        "nb": "Produkt",
+        "nl": "Product",
+        "pl": "Produkt",
+        "pt-BR": "Produto",
+        "pt-PT": "Produto",
+        "sv": "Produkt",
+        "th": "สินค้า",
+        "tr": "Ürün",
+        "vi": "Sản phẩm",
+        "zh-CN": "产品2",
+        "zh-TW": "產品2"
+      }
+    }
+  ],
+  "presets": [
+    {
+      "name": {
+        "cs": "Propagovaný produkt",
+        "da": "Fremhævet produkt",
+        "de": "Vorgestelltes Produkt",
+        "en": "Featured product",
+        "es": "Producto destacado",
+        "fi": "Esittelyssä oleva tuote",
+        "fr": "Produit vedette",
+        "it": "Prodotto in primo piano",
+        "ja": "おすすめ商品",
+        "ko": "특별 상품",
+        "nb": "Utvalgt produkt",
+        "nl": "Uitgelicht product",
+        "pl": "Polecany produkt",
+        "pt-BR": "Produto em destaque",
+        "pt-PT": "Produto em destaque",
+        "sv": "Utvald produkt",
+        "th": "สินค้าที่แนะนำ",
+        "tr": "Öne çıkan ürün",
+        "vi": "Sản phẩm nổi bật",
+        "zh-CN": "特色产品2",
+        "zh-TW": "精選產品2"
+      },
+      "category": {
+        "cs": "Produkt",
+        "da": "Produkt",
+        "de": "Produkte",
+        "en": "Product",
+        "es": "Producto",
+        "fi": "Tuote",
+        "fr": "Produit",
+        "it": "Prodotto",
+        "ja": "商品",
+        "ko": "제품",
+        "nb": "Produkt",
+        "nl": "Product",
+        "pl": "Produkt",
+        "pt-BR": "Produto",
+        "pt-PT": "Produto",
+        "sv": "Produkt",
+        "th": "สินค้า",
+        "tr": "Ürün",
+        "vi": "Sản phẩm",
+        "zh-CN": "产品",
+        "zh-TW": "產品"
+      }
+    }
+  ]
+}
+{% endschema %}

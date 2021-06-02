@@ -33,7 +33,7 @@
           {%- assign block_width = 'one-whole' -%}
       {% endcase %}
 
-      {%- if block.type == 'blog' or block.type == 'article' -%}
+      {%- if block.type == 'blog' or block.type == 'article' or block.type == 'product' -%}
         {%- assign block_width_mobile = 'small--one-whole' -%}
       {%- endif -%}
 
@@ -93,7 +93,40 @@
             {% when 'product' %}
               {%- assign product = all_products[block.settings.product] -%}
               {% if product.title.size > 0 %}
-                {% include 'product-card-grid', max_height: max_height, product: product %}
+                <div class="grid-view-item{% unless product.available %} grid-view-item--sold-out{% endunless %} product-card">
+                  <a class="grid-view-item__link grid-view-item__image-container full-width-link" href="{{ product.url }}">
+                    <span class="visually-hidden">{{ product.title }}</span>
+                  </a>
+                  {% capture img_id %}ProductCardImage-{{ section.id }}-{{ product.id }}{% endcapture %}
+                  {% capture wrapper_id %}ProductCardImageWrapper-{{ section.id }}-{{ product.id }}{% endcapture %}
+                  {%- assign preview_image = product.featured_media.preview_image -%}
+                  {% if block.settings.product-main-image == blank %}
+                    {%- assign img_url = preview_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                  {% else %}
+                    {%- assign img_url = block.settings.product-main-image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                  {% endif %}
+                  
+                  {% unless preview_image == blank %}
+                    {% include 'image-style', image: preview_image, height: max_height, wrapper_id: wrapper_id, img_id: img_id %}
+                  {% endunless %}
+                  <div class="product-card__image-with-placeholder-wrapper" data-image-loading-animation>
+                    <div id="{{ wrapper_id }}" class="grid-view-item__image-wrapper product-card__image-wrapper js">
+                      <div style="padding-top:{% unless preview_image == blank %}{{ 1 | divided_by: preview_image.aspect_ratio | times: 100 }}%{% else %}100%{% endunless %};">
+                        <img id="{{ img_id }}"
+                              class="grid-view-item__image lazyload"
+                              alt="{{ preview_image.alt }}"
+                              data-src="{{ img_url }}"
+                              data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                              data-aspectratio="{{ preview_image.aspect_ratio }}"
+                              data-sizes="auto"
+                              data-image>
+                      </div>
+                      <div class="home-product-btn-wrapper">
+                        <a href="{{ product.url }}" class="btn home-product-btn">Shop Now <i class="fa fa-chevron-right"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               {% else %}
                 {% comment %}
                   No product yet. Show onboarding one.
@@ -104,10 +137,12 @@
                       {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
                       {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
                     </div>
+                    {% comment %}
                     <div class="h4 grid-view-item__title">{{ 'homepage.onboarding.product_title' | t }}</div>
                     <div class="grid-view-item__meta">
                       {{ 1999 | money }}
                     </div>
+                    {% endcomment %}
                   </a>
                 </div>
               {% endif %}
@@ -1843,6 +1878,33 @@
             "vi": "Sản phẩm",
             "zh-CN": "产品",
             "zh-TW": "產品"
+          }
+        },
+        {
+          "type": "image_picker",
+          "id": "product-main-image",
+          "label": {
+            "cs": "Produkt",
+            "da": "Produkt",
+            "de": "Produkt",
+            "en": "Product",
+            "es": "Producto",
+            "fi": "Tuote",
+            "fr": "Produit",
+            "it": "Prodotto",
+            "ja": "商品",
+            "ko": "제품",
+            "nb": "Produkt",
+            "nl": "Product",
+            "pl": "Produkt",
+            "pt-BR": "Produto",
+            "pt-PT": "Produto",
+            "sv": "Produkt",
+            "th": "สินค้า",
+            "tr": "Ürün",
+            "vi": "Sản phẩm",
+            "zh-CN": "产品主图",
+            "zh-TW": "產品主图"
           }
         },
         {

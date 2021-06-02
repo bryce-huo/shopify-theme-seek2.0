@@ -3482,7 +3482,9 @@ theme.Slideshow = (function() {
         slideInterval: 0,
         slidesToShow: 0,
         slidesToScroll: 1,
-        type: 'fade'
+        type: 'fade',
+        direction: ''
+
       },
       options
     );
@@ -3760,6 +3762,9 @@ theme.Slideshow = (function() {
       this.sliderItemWidth = Math.floor(
         this.sliderContainer.offsetWidth / this.options.slidesToShow
       );
+      this.sliderItemHeight = Math.floor(
+        this.sliderContainer.offsetHeight / this.options.slidesToShow
+      );
       this.sliderTranslateXMove =
         this.sliderItemWidth * this.options.slidesToScroll;
 
@@ -3773,10 +3778,15 @@ theme.Slideshow = (function() {
       this.slides.forEach(function(sliderItem, index) {
         var sliderItemLink = sliderItem.querySelector(selectors.sliderItemLink);
         sliderItem.style.width = this.sliderItemWidth + 'px';
+        if(this.options.direction == 'vertical') {
+          sliderItem.style.height = this.sliderItemHeight + 'px';
+        }
         sliderItem.setAttribute('aria-hidden', true);
         sliderItem.setAttribute('tabindex', -1);
         this.sliderItemWidthTotal =
           this.sliderItemWidthTotal + sliderItem.offsetWidth;
+        this.sliderItemHeightTotal =
+          this.sliderItemHeightTotal + sliderItem.offsetHeight;
 
         if (sliderItemLink) {
           sliderItemLink.setAttribute('tabindex', -1);
@@ -3792,9 +3802,16 @@ theme.Slideshow = (function() {
         }
       }, this);
 
-      this.sliderTrack.style.width =
+      if(this.options.direction == 'vertical') {
+        this.sliderTrack.style.height =
+          Math.floor(this.sliderItemHeightTotal) + 'px';
+        this.sliderTrack.style.transform = 'translateY(-0px)';
+      } else {
+        this.sliderTrack.style.width =
         Math.floor(this.sliderItemWidthTotal) + 'px';
-      this.sliderTrack.style.transform = 'translateX(-0px)';
+        this.sliderTrack.style.transform = 'translateX(-0px)';
+      }
+      
 
       // set disabled attribute on Previous button
       if (this.buttons.length) {
@@ -3833,8 +3850,14 @@ theme.Slideshow = (function() {
 
       this.touchMovePosition = this.touchStartPosition + difference.xPosition;
 
-      this.sliderTrack.style.transform =
+      if(this.options.direction == 'vertical') {
+        this.sliderTrack.style.transform =
+        'translateY(' + this.touchMovePosition + 'px';
+      } else {
+        this.sliderTrack.style.transform =
         'translateX(' + this.touchMovePosition + 'px';
+      }
+      
     },
 
     _onTouchEnd: function(event, direction, difference) {
@@ -3862,8 +3885,14 @@ theme.Slideshow = (function() {
       this.slideIndex = this._getNextSlideIndex(slideDirection);
 
       this.sliderTrack.style.transition = 'transform 500ms ease 0s';
-      this.sliderTrack.style.transform =
+      if(this.options.direction == 'vertical') {
+        this.sliderTrack.style.transform =
+        'translateY(' + nextTranslateXPosition + 'px';
+      }else {
+        this.sliderTrack.style.transform =
         'translateX(' + nextTranslateXPosition + 'px';
+      }
+      
 
       window.setTimeout(
         function() {
@@ -3926,7 +3955,12 @@ theme.Slideshow = (function() {
         this.sliderTrack.style.transition = 'transform 500ms ease 0s';
         var newPosition = index * this.slides[0].offsetWidth;
 
-        this.sliderTrack.style.transform = 'translateX(-' + newPosition + 'px)';
+        if(this.options.direction == 'vertical') {
+          this.sliderTrack.style.transform = 'translateY(-' + newPosition + 'px)';
+        }else {
+          this.sliderTrack.style.transform = 'translateX(-' + newPosition + 'px)';
+        }
+        
 
         if (this.options.slidesToShow > 1) {
           this._verifyFirstLastSlideTranslateX(newPosition);
@@ -4076,11 +4110,22 @@ theme.Slideshow = (function() {
       this.sliderTrack.style.transition = 'transform 500ms ease 0s';
 
       if (direction === 'next') {
-        valueXToMove = currentTranslateXPosition - this.sliderTranslateXMove;
-        this.sliderTrack.style.transform = 'translateX(' + valueXToMove + 'px)';
+        if(this.options.direction == 'vertical') {
+          valueXToMove = currentTranslateXPosition - this.sliderTranslateXMove;
+          this.sliderTrack.style.transform = 'translateY(' + valueXToMove + 'px)';
+        }else {
+          valueXToMove = currentTranslateXPosition - this.sliderTranslateXMove;
+          this.sliderTrack.style.transform = 'translateX(' + valueXToMove + 'px)';
+        }
+        
       } else {
-        valueXToMove = currentTranslateXPosition + this.sliderTranslateXMove;
-        this.sliderTrack.style.transform = 'translateX(' + valueXToMove + 'px)';
+        if(this.options.direction == 'vertical') {
+          valueXToMove = currentTranslateXPosition + this.sliderTranslateXMove;
+          this.sliderTrack.style.transform = 'translateY(' + valueXToMove + 'px)';
+        }else {
+          valueXToMove = currentTranslateXPosition + this.sliderTranslateXMove;
+          this.sliderTrack.style.transform = 'translateX(' + valueXToMove + 'px)';
+        }
       }
 
       this._verifyFirstLastSlideTranslateX(valueXToMove);
@@ -8089,6 +8134,26 @@ theme.Product = (function() {
 
     _initDesktopBreakpoint: function() {
       if (this.mqlMediumUp.matches && this.settings.zoomEnabled) {
+        // this._initThumbnailSlider();
+        setTimeout(
+          function() {
+            this.slideshow = new theme.Slideshow(
+              this.container.querySelector('[data-thumbnail-slider]'),
+              {
+                canUseTouchEvents: true,
+                type: 'slide',
+                slideActiveClass: 'slick-active',
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                direction: "vertical"
+              }
+            );
+
+            this.settings.sliderActive = true;
+          }.bind(this),
+          250
+        );
+
         this.imageZoomWrapper.forEach(
           function(element, index) {
             this._enableZoom(element, index);
@@ -9122,7 +9187,7 @@ theme.ProductRecommendations = (function() {
       baseUrl +
       '?section_id=product-recommendations&product_id=' +
       productId +
-      '&limit=4';
+      '&limit=10';
 
     window.performance.mark(
       'debut:product:fetch_product_recommendations.start'
@@ -9141,6 +9206,26 @@ theme.ProductRecommendations = (function() {
         window.performance.mark(
           'debut:product:fetch_product_recommendations.end'
         );
+
+        $(".gallery-slider").slick({
+          dots: false,
+          infinite: true,
+          speed: 300,
+          slidesToShow: 4,
+          slidesToScroll: 1,
+          arrows: true,
+          responsive: [{
+            breakpoint: 768,
+            settings: {
+              slidesToShow: 2
+            }
+          }, {
+            breakpoint: 544,
+            settings: {
+              slidesToShow: 1
+            }
+          }]
+        })
 
         performance.measure(
           'debut:product:fetch_product_recommendations',

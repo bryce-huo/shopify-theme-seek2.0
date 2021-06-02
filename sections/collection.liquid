@@ -1,11 +1,17 @@
 <div class="page-width">
   {% if section.settings.title != blank %}
     <div class="section-header text-center">
-      <h2>{{ section.settings.title | escape }}</h2>
+      <h2 style="font-size: 12px;font-weight: normal;">{{ section.settings.title | escape }}</h2>
+      <div class="featured-menu">
+        <a href="javascript:;" class="active">{{ section.settings.collection1_text }}</a>
+        <a href="javascript:;">{{ section.settings.collection2_text }}</a>
+      </div>
     </div>
   {% endif %}
 
-  {%- assign collection = collections[section.settings.collection] -%}
+  {%- assign collection1 = collections[section.settings.collection1] -%}
+  {%- assign collection2 = collections[section.settings.collection2] -%}
+
 
   {% case section.settings.grid %}
     {% when 2 %}
@@ -25,7 +31,32 @@
   {%- assign product_limit = section.settings.grid | times: section.settings.rows -%}
 
   <ul class="grid grid--uniform grid--view-items">
-    {% for product in collection.products limit: product_limit %}
+    {% for product in collection1.products limit: product_limit %}
+      <li class="grid__item grid__item--{{section.id}} {{ grid_item_width }}">
+        {% include 'product-card-grid', max_height: max_height, product: product, show_vendor: section.settings.show_vendor %}
+      </li>
+    {% else %}
+
+      {% for i in (1..product_limit) %}
+        <li class="grid__item grid__item--{{section.id}} {{ grid_item_width }}">
+          <div class="grid-view-item product-card">
+            <a class="grid-view-item__link grid-view-item__image-container full-width-link" href="#">
+              <span class="visually-hidden">{{ 'homepage.onboarding.product_title' | t }}</span>
+            </a>
+            <div class="grid-view-item__image-wrapper">
+              {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+              {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+            <div class="h4 grid-view-item__title" aria-hidden="true">{{ 'homepage.onboarding.product_title' | t }}</div>
+            {% include 'product-price' %}
+          </div>
+        </li>
+      {% endfor %}
+    {% endfor %}
+  </ul>
+
+  <ul class="grid grid--uniform grid--view-items" style="display: none;">
+    {% for product in collection2.products limit: product_limit %}
       <li class="grid__item grid__item--{{section.id}} {{ grid_item_width }}">
         {% include 'product-card-grid', max_height: max_height, product: product, show_vendor: section.settings.show_vendor %}
       </li>
@@ -140,7 +171,7 @@
       }
     },
     {
-      "id": "collection",
+      "id": "collection1",
       "type": "collection",
       "label": {
         "cs": "Kolekce",
@@ -162,8 +193,51 @@
         "th": "คอลเลกชัน",
         "tr": "Koleksiyon",
         "vi": "Bộ sưu tập",
-        "zh-CN": "收藏",
+        "zh-CN": "收藏1",
         "zh-TW": "商品系列"
+      }
+    },
+    {
+      "id": "collection1_text",
+      "type": "text",
+      "label": {
+        "zh-CN": "收藏1标题",
+        "zh-TW": "商品系列1标题"
+      }
+    },
+    {
+      "id": "collection2",
+      "type": "collection",
+      "label": {
+        "cs": "Kolekce",
+        "da": "Kollektion",
+        "de": "Kategorie",
+        "en": "Collection",
+        "es": "Colección",
+        "fi": "Kokoelma",
+        "fr": "Collection",
+        "it": "Collezione",
+        "ja": "コレクション",
+        "ko": "컬렉션",
+        "nb": "Samling",
+        "nl": "Collectie",
+        "pl": "Kolekcja",
+        "pt-BR": "Coleção",
+        "pt-PT": "Coleção",
+        "sv": "Produktserie",
+        "th": "คอลเลกชัน",
+        "tr": "Koleksiyon",
+        "vi": "Bộ sưu tập",
+        "zh-CN": "收藏2",
+        "zh-TW": "商品系列"
+      }
+    },
+    {
+      "id": "collection2_text",
+      "type": "text",
+      "label": {
+        "zh-CN": "收藏2标题",
+        "zh-TW": "商品系列2标题"
       }
     },
     {

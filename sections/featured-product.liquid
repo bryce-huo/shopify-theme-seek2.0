@@ -77,7 +77,7 @@
         <div data-thumbnail-slider>
           <div class="thumbnails-wrapper{% if enable_thumbnail_slides == true %} slider-active{% endif %}" data-slider>
             {% if enable_thumbnail_slides == true %}
-              <button type="button" class="btn btn--link medium-up--hide thumbnails-slider__btn thumbnails-slider__prev thumbnails-slider__prev--{{ section.id }}" data-slider-button>
+              <button type="button" class="btn btn--link thumbnails-slider__btn thumbnails-slider__prev thumbnails-slider__prev--{{ section.id }}" data-slider-button>
                 {% include 'icon-chevron-left' %}
                 <span class="icon__fallback-text">{{ 'sections.slideshow.previous_slide' | t }}</span>
               </button>
@@ -126,7 +126,7 @@
               {% endif %}
             </ul>
             {% if enable_thumbnail_slides == true %}
-              <button type="button" class="btn btn--link medium-up--hide thumbnails-slider__btn thumbnails-slider__next thumbnails-slider__next--{{ section.id }}" data-slider-button data-slider-button-next>
+              <button type="button" class="btn btn--link thumbnails-slider__btn thumbnails-slider__next thumbnails-slider__next--{{ section.id }}" data-slider-button data-slider-button-next>
                 {% include 'icon-chevron-right' %}
                 <span class="icon__fallback-text">{{ 'sections.slideshow.next_slide' | t }}</span>
               </button>

@@ -72,7 +72,7 @@
         <div data-thumbnail-slider>
           <div class="thumbnails-wrapper{% if enable_thumbnail_slides == true %} slider-active{% endif %}" data-slider>
             {% if enable_thumbnail_slides == true %}
-              <button type="button" class="btn btn--link medium-up--hide thumbnails-slider__btn thumbnails-slider__prev thumbnails-slider__prev--{{ section.id }}" data-slider-button>
+              <button type="button" class="btn btn--link thumbnails-slider__btn thumbnails-slider__prev thumbnails-slider__prev--{{ section.id }}" data-slider-button>
                 {% include 'icon-chevron-left' %}
                 <span class="icon__fallback-text">{{ 'sections.slideshow.previous_slide' | t }}</span>
               </button>
@@ -121,7 +121,7 @@
               {% endif %}
             </ul>
             {% if enable_thumbnail_slides == true %}
-              <button type="button" class="btn btn--link medium-up--hide thumbnails-slider__btn thumbnails-slider__next thumbnails-slider__next--{{ section.id }}" data-slider-button data-slider-button-next>
+              <button type="button" class="btn btn--link thumbnails-slider__btn thumbnails-slider__next thumbnails-slider__next--{{ section.id }}" data-slider-button data-slider-button-next>
                 {% include 'icon-chevron-right' %}
                 <span class="icon__fallback-text">{{ 'sections.slideshow.next_slide' | t }}</span>
               </button>
@@ -269,10 +269,16 @@
         >
         </div>
 
+        
         <div class="product-single__description rte">
-          {{ product.description }}
+          {% if section.settings.promotional_text != blank %}
+            {{ section.settings.promotional_text }}
+          {% endif %}
+          {% if section.settings.promotional_img != blank %}
+            <img src="{{ section.settings.promotional_img | img_url: '1000x' }}"/>
+          {% endif %}
         </div>
-
+        
         {% if section.settings.show_share_buttons %}
           {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product.featured_media %}
         {% endif %}
@@ -690,6 +696,22 @@
         "zh-TW": "啟用影片循環功能"
       },
       "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "promotional_img",
+      "label": {
+        "zh-CN": "促销图片",
+        "zh-TW": "促销图片"
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "promotional_text",
+      "label": {
+        "zh-CN": "促销文案",
+        "zh-TW": "促销文案"
+      }
     }
   ]
 }

@@ -1,31 +1,118 @@
-<div class="page-width">
+<div class="page-width homepage-carousel">
   {% if section.settings.title != blank %}
     <div class="section-header text-center">
       <h2>{{ section.settings.title | escape }}</h2>
     </div>
   {% endif %}
 
-  {% case section.settings.grid %}
-    {% when 2 %}
-      {%- assign grid_item_width = 'medium-up--one-half' -%}
-    {% when 3 %}
-      {%- assign grid_item_width = 'small--one-half medium-up--one-third' -%}
-    {% when 4 %}
-      {%- assign grid_item_width = 'small--one-half medium-up--one-quarter' -%}
-    {% when 5 %}
-      {%- assign grid_item_width = 'small--one-half medium-up--one-fifth' -%}
-  {% endcase %}
-
-  <div class="collection-grid">
-    <ul class="grid grid--uniform">
-      {% for block in section.blocks limit: section.blocks.size %}
-        <li class="grid__item {{ grid_item_width }}" {{ block.shopify_attributes }}>
-          {%- assign collection = collections[block.settings.collection] -%}
-          {% include 'collection-grid-item', collection: collection %}
-        </li>
-      {% endfor %}
-    </ul>
+  <div class="js-carousel" data-carousel-config="{&quot;dots&quot;:false,&quot;arrows&quot;:true,&quot;slidesToShow&quot;:4,&quot;responsive&quot;:[{&quot;breakpoint&quot;:992,&quot;settings&quot;:{&quot;slidesToShow&quot;:3}},{&quot;breakpoint&quot;:768,&quot;settings&quot;:{&quot;slidesToShow&quot;:2}},{&quot;breakpoint&quot;:600,&quot;settings&quot;:{&quot;centerMode&quot;:true,&quot;centerPadding&quot;:&quot;40px&quot;,&quot;slidesToShow&quot;:1}}]}">
+    {% for block in section.blocks limit: section.blocks.size %}
+      {%- assign collection = collections[block.settings.collection] -%}
+       <a href="{% if collection.products == empty %}#{% else %}{{ collection.url }}{% endif %}">
+        <div class="category-tile">
+          {% if collection.image %}
+            {%- assign collection_image = collection.image -%}
+          {% elsif collection.products.first and collection.products.first.media != empty %}
+            {%- assign collection_image = collection.products.first.featured_media.preview_image -%}
+          {% else %}
+            {% assign collection_image = blank %}
+          {% endif %}
+          <img class="img-fluid" src="{{ collection_image | img_url: '1024x1024' }}" alt="{{ collection.title }}">
+          <h3>
+            {% if collection.title == blank %}
+              {{ 'homepage.onboarding.collection_title' | t }}
+            {% else %}
+              {{ collection.title }}
+            {% endif %}
+          </h3>
+        </div>
+      </a>
+    {% endfor %}
   </div>
+
+  <style>
+    .homepage-carousel .category-tile img {
+      width: 100%;
+      height: 17.1875rem;
+      object-fit: cover;
+    }
+    .homepage-carousel .category-tile h3 {
+      font-size: .75rem;
+      font-weight: 500;
+      line-height: .875rem;
+      letter-spacing: .38px;
+      margin: 0;
+      text-align: center;
+      text-transform: uppercase;
+      padding: .625rem 0;
+      color: #000;
+      text-align: center !important;
+    }
+    @media (min-width: 768px) {
+      .homepage-carousel .category-tile h3 {
+          text-align: left;
+          font-size: .8125rem;
+      }
+    }
+    @media (min-width: 992px) {
+      .homepage-carousel .category-tile h3{
+        font-size: .875rem;
+        line-height: 1.25rem;
+        letter-spacing: .07812rem;
+      }
+    }
+    .homepage-carousel .slick-arrow {
+        border: .0625rem solid #cbcbcb;
+        box-shadow: 0 2rem 5rem -2.5rem rgba(0,0,0,.25),0 .3rem 1rem 0 rgba(0,0,0,.3);
+        cursor: pointer;
+        font-size: 0;
+        padding: 1.4375rem 1.5625rem;
+        position: absolute;
+        top: 50%;
+        z-index: 5;
+        background: #fff;
+        transform: translateY(-50%);
+        display: none!important;
+        font-family: FontAwesome;
+        width: auto;
+        height: auto;
+    }
+
+    @media(min-width: 544px) {
+        .homepage-carousel .slick-arrow {
+            display:block!important
+        }
+    }
+
+    .homepage-carousel .slick-arrow:before {
+        font-size: .625rem;
+        font-family: FontAwesome;
+    }
+
+    .homepage-carousel .slick-prev {
+        left: -1.5625rem
+    }
+
+    .homepage-carousel .slick-prev:before {
+        content: "\F053"
+    }
+
+    .homepage-carousel .slick-next {
+        right: -1.5625rem
+    }
+
+    .homepage-carousel .slick-next:before {
+        content: "\F054"
+    }
+
+    .homepage-carousel .slick-slide {
+        margin: 0 .3125rem
+    }
+
+    .homepage-carousel .slick-slide a {
+        text-decoration: none
+    }
+  </style>
 
   {% if section.blocks.size == 0 %}
     {% include 'no-blocks' %}

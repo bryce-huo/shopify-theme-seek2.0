@@ -1,0 +1,367 @@
+<div class="page-width homepage-carousel">
+  <div class="text-collection">
+    <div class="text-collection-in">
+      <h3>TOP</h3>
+      <h2>picks</h2>
+      <p><span class="lett-spac">SEE WHAT IS TRENDING</span></p>
+    </div>
+  </div>
+  
+  <div class="js-carousel-wrapper">
+    <div class="js-carousel" data-carousel-config="{&quot;dots&quot;:false,&quot;arrows&quot;:true,&quot;slidesToShow&quot;:3,&quot;responsive&quot;:[]}">
+      {% for block in section.blocks limit: section.blocks.size %}
+        {%- assign collection = collections[block.settings.collection] -%}
+         <a href="{% if collection.products == empty %}#{% else %}{{ collection.url }}{% endif %}">
+          <div class="category-tile">
+            {% if collection.image %}
+              {%- assign collection_image = collection.image -%}
+            {% elsif collection.products.first and collection.products.first.media != empty %}
+              {%- assign collection_image = collection.products.first.featured_media.preview_image -%}
+            {% else %}
+              {% assign collection_image = blank %}
+            {% endif %}
+            <img class="img-fluid" src="{{ collection_image | img_url: '1024x1024' }}" alt="{{ collection.title }}">
+            <h3>
+              {% if collection.title == blank %}
+                {{ 'homepage.onboarding.collection_title' | t }}
+              {% else %}
+                {{ collection.title }}
+              {% endif %}
+            </h3>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <style>
+    .collection-list-main {
+      background-color: #e4beb0;
+      padding: 30px 0 20px 0;
+      /*margin-top: 30px;*/
+    }
+    .collection-list-main .text-collection {
+      position: relative;
+      width: 25%;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: -4px;
+      text-align: center;
+    }
+    .collection-list-main .text-collection .text-collection-in {
+      display: inline-block;
+      text-align: left;
+    }
+    .text-collection h3 {
+      letter-spacing: 5px;
+      font-size: 20px;
+      position: absolute;
+      top: 0;
+    }
+    .text-collection h2 {
+      font-size: 122px;
+      color: #000;
+      font-weight: 900;
+      font-family: 'AdobeModernMTStdExtended';
+      line-height: normal;
+      margin-bottom: 0;
+      text-transform: inherit;
+      letter-spacing: inherit;
+    }
+    .text-collection p {
+      font-family: 'GTWalsheimProRegular';
+      color: #000;
+      line-height: normal;
+    }
+    .lett-spac {
+      letter-spacing: 4px;
+    }
+    .js-carousel-wrapper {
+      margin: 0 auto;
+      width: 75%;
+      text-align: right;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: -4px;
+    }
+    .js-carousel-wrapper .js-carousel {
+      max-width: 85%;
+      display: inline-block;
+    }
+    .homepage-carousel .js-carousel-wrapper .category-tile img {
+      height: auto;
+    }
+    .js-carousel-wrapper .js-carousel:before{
+      content: '';
+      display: block;
+      position: absolute;
+      background-image: url({{'arrow.png' | asset_url }});
+      background-repeat: no-repeat;
+      height: 90px;
+      width: 100px;
+      background-size: cover;
+      left: -90px;
+      bottom: 50px;
+      transform: rotate(
+      -20deg
+      );
+    }
+    @media (max-width: 768px) {
+      .js-carousel-wrapper {
+        width: 100%;
+        margin-left: 0 !important;
+      }
+      .js-carousel-wrapper .js-carousel {
+        max-width: 100%;
+      }
+    }
+    @media (max-width: 1199px) {
+      .js-carousel-wrapper .js-carousel:before{
+        height: 70px;
+        width: 80px;
+        left: -60px;
+        transform: rotate(-30deg);
+      }
+      .text-collection h2 {
+        font-size: 90px;
+      }
+      .lett-spac {
+        letter-spacing: 3px;
+      }
+    }
+    @media (max-width: 991px) {
+      .js-carousel-wrapper .js-carousel:before{
+        height: 45px;
+        width: 50px;
+        bottom: 70px;
+        left: -40px;
+      }
+      .text-collection h2 {
+        font-size: 70px;
+      }
+      .lett-spac {
+        letter-spacing: 1px;
+      }
+      .text-collection h3 {
+        font-size: 16px;
+        letter-spacing: 3px;
+      }
+    }
+    @media (max-width: 768px) {
+      .js-carousel-wrapper .js-carousel:before{
+        left: auto;
+        bottom: auto;
+        right: -5px;
+        top: -60px;
+        height: 40px;
+        width: 45px;
+        transform: rotate(130deg);
+      }
+      .text-collection h2 {
+        text-align: left;
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+      .text-collection p{
+        position: absolute;
+        top: 33%;
+        transform: translateY(-50%);
+        right: 40px;
+        font-size: 12px;
+      }
+      .collection-list-main .text-collection {
+        width: 100%;
+        text-align: left;
+      }
+    }
+    @media (max-width: 480px) {
+      .js-carousel-wrapper .js-carousel:before{
+        top: -45px;
+        height: 30px;
+        width: 35px;
+      }
+      .text-collection h2 {
+        font-size: 60px;
+      }
+      .text-collection h3 {
+        font-size: 13px;
+      }
+      .text-collection p{
+        right: 10px;
+        font-size: 11px;
+      }
+      .lett-spac {
+        letter-spacing: 2px;
+      }
+    }
+    @media (max-width: 375px) {
+      .js-carousel-wrapper .js-carousel:before{
+        top: -45px;
+        height: 30px;
+        width: 35px;
+      }
+      .text-collection h2 {
+        font-size: 54px;
+      }
+      .lett-spac {
+        letter-spacing: 1px;
+      }
+    }
+  </style>
+
+  {% if section.blocks.size == 0 %}
+    {% include 'no-blocks' %}
+  {% endif %}
+</div>
+
+
+
+{% schema %}
+{
+  "name": {
+    "cs": "Seznam kolekcí",
+    "da": "Kollektionsliste",
+    "de": "Kategorien-Liste",
+    "en": "Collection list",
+    "es": "Lista de colecciones",
+    "fi": "Kokoelmaluettelo",
+    "fr": "Liste des collections",
+    "it": "Elenco delle collezioni",
+    "ja": "コレクションリスト",
+    "ko": "컬렉션 목록",
+    "nb": "Samlingsliste",
+    "nl": "Collectielijst",
+    "pl": "Lista kolekcji",
+    "pt-BR": "Lista de coleções",
+    "pt-PT": "Lista de coleções",
+    "sv": "Kollektionslista",
+    "th": "รายการคอลเลกชัน",
+    "tr": "Koleksiyon listesi",
+    "vi": "Danh sách bộ sưu tập",
+    "zh-CN": "产品系列列表2",
+    "zh-TW": "商品系列清單2"
+  },
+  "class": "index-section collection-list-main",
+  "max_blocks": 3,
+  "settings": [
+  ],
+  "blocks": [
+    {
+      "type": "featured_collection",
+      "name": {
+        "cs": "Kolekce",
+        "da": "Kollektion",
+        "de": "Kategorie",
+        "en": "Collection",
+        "es": "Colección",
+        "fi": "Kokoelma",
+        "fr": "Collection",
+        "it": "Collezione",
+        "ja": "コレクション",
+        "ko": "컬렉션",
+        "nb": "Samling",
+        "nl": "Collectie",
+        "pl": "Kolekcja",
+        "pt-BR": "Coleção",
+        "pt-PT": "Coleção",
+        "sv": "Produktserie",
+        "th": "คอลเลกชัน",
+        "tr": "Koleksiyon",
+        "vi": "Bộ sưu tập",
+        "zh-CN": "收藏",
+        "zh-TW": "商品系列"
+      },
+      "settings": [
+        {
+          "label": {
+            "cs": "Kolekce",
+            "da": "Kollektion",
+            "de": "Kategorie",
+            "en": "Collection",
+            "es": "Colección",
+            "fi": "Kokoelma",
+            "fr": "Collection",
+            "it": "Collezione",
+            "ja": "コレクション",
+            "ko": "컬렉션",
+            "nb": "Samling",
+            "nl": "Collectie",
+            "pl": "Kolekcja",
+            "pt-BR": "Coleção",
+            "pt-PT": "Coleção",
+            "sv": "Produktserie",
+            "th": "คอลเลกชัน",
+            "tr": "Koleksiyon",
+            "vi": "Bộ sưu tập",
+            "zh-CN": "收藏",
+            "zh-TW": "商品系列"
+          },
+          "id": "collection",
+          "type": "collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": {
+        "cs": "Seznam kolekcí",
+        "da": "Kollektionsliste",
+        "de": "Kategorien-Liste",
+        "en": "Collection list",
+        "es": "Lista de colecciones",
+        "fi": "Kokoelmaluettelo",
+        "fr": "Page de liste des collections",
+        "it": "Elenco delle collezioni",
+        "ja": "コレクションリスト",
+        "ko": "컬렉션 목록",
+        "nb": "Samlingsliste",
+        "nl": "Collectielijst",
+        "pl": "Lista kolekcji",
+        "pt-BR": "Lista de coleções",
+        "pt-PT": "Lista de coleções",
+        "sv": "Kollektionslista",
+        "th": "รายการคอลเลกชัน",
+        "tr": "Koleksiyon listesi",
+        "vi": "Danh sách bộ sưu tập",
+        "zh-CN": "产品系列列表2",
+        "zh-TW": "商品系列清單2"
+      },
+      "category": {
+        "cs": "Kolekce",
+        "da": "Kollektion",
+        "de": "Kategorie",
+        "en": "Collection",
+        "es": "Colección",
+        "fi": "Kokoelma",
+        "fr": "Collection",
+        "it": "Collezione",
+        "ja": "コレクション",
+        "ko": "컬렉션",
+        "nb": "Samling",
+        "nl": "Collectie",
+        "pl": "Kolekcja",
+        "pt-BR": "Coleção",
+        "pt-PT": "Coleção",
+        "sv": "Produktserie",
+        "th": "คอลเลกชัน",
+        "tr": "Koleksiyon",
+        "vi": "Bộ sưu tập",
+        "zh-CN": "收藏",
+        "zh-TW": "商品系列"
+      },
+      "blocks": [
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

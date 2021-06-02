@@ -1,310 +1,1005 @@
-{%- assign social_icons = false -%}
-{%- assign inline_list = false -%}
-{%- assign locale_selector = false -%}
-{%- assign country_selector = false -%}
-{%- assign show_payment_icons = false -%}
-{%- assign show_selectors = false -%}
-
-
-{%- assign show_country_selector = section.settings.show_currency_selector  -%}
-{%- if show_country_selector and localization.available_countries.size > 1 -%}
-  {%- assign country_selector = true -%}
-{%- endif -%}
-
-{%- if section.settings.show_locale_selector and localization.available_languages.size > 1 -%}
-  {%- assign locale_selector = true -%}
-{%- endif -%}
-
-{%- if section.settings.show_payment_icons -%}
-  {%- unless shop.enabled_payment_types == empty -%}
-    {%- assign show_payment_icons = true -%}
-  {%- endunless -%}
-{%- endif -%}
-
-{%- if country_selector or locale_selector -%}
-  {%- assign show_selectors = true -%}
-{%- endif -%}
-
-{%- if
-  settings.social_twitter_link != blank
-  or settings.social_facebook_link != blank
-  or settings.social_pinterest_link != blank
-  or settings.social_instagram_link != blank
-  or settings.social_tumblr_link != blank
-  or settings.social_snapchat_link != blank
-  or settings.social_youtube_link != blank
-  or settings.social_vimeo_link != blank
-  or request.page_type == 'article'
-  or request.page_type == 'blog'
--%}
-  {%- assign social_icons = true -%}
-{%- endif -%}
-
-{%- assign payment_width_class = "one-half" -%}
-{%- if show_selectors -%}
-  {%- unless social_icons -%}
-    {%- assign payment_width_class = "" -%}
-  {%- endunless -%}
-{%- endif -%}
-
-{%- assign copyright_show_class = "medium-up--hide" -%}
-{%- if social_icons -%}
-  {%- unless show_selectors -%}
-    {%- assign copyright_show_class = "" -%}
-  {%- endunless -%}
-{%- endif -%}
-
-{%- case section.blocks.size -%}
-  {%- when 1 -%}
-    {%- assign footer_item = 'site-footer__item--full-width' -%}
-    {%- assign inline_list = true -%}
-  {%- when 2 -%}
-    {%- assign footer_item = 'site-footer__item--one-half' -%}
-    {%- assign inline_list = true -%}
-  {%- when 3 -%}
-    {%- assign footer_item = 'site-footer__item--one-third' -%}
-    {%- for block in section.blocks -%}
-      {%- if block.type == 'newsletter' -%}
-        {%- assign footer_item = 'site-footer__item--one-quarter' -%}
-        {%- break -%}
-      {%- endif -%}
-    {%- endfor -%}
-  {%- when 4 -%}
-    {%- assign footer_item = 'site-footer__item--one-quarter' -%}
-  {%- when 5 -%}
-    {%- assign footer_item = 'site-footer__item--one-fifth' -%}
-{%- endcase -%}
-
-{% comment %} Create an appropriate hover color based on text color and brightness {% endcomment %}
-{%- assign footer_text_color = section.settings.color_footer_text -%}
-{%- assign footer_text_color_brightness = section.settings.color_footer_text | color_brightness -%}
-{%- if footer_text_color_brightness <= 26 -%}
-  {%- assign footer_text_color_hover = footer_text_color | color_lighten: 25 -%}
-{%- elsif footer_text_color_brightness <= 65 -%}
-  {%- assign footer_text_color_hover = footer_text_color | color_lighten: 15 -%}
-{%- else -%}
-  {%- assign footer_text_color_hover = footer_text_color | color_darken: 10 -%}
-{%- endif -%}
-
+<!-- 新footer -->
 <style>
-  .site-footer__hr {
-    border-bottom: 1px solid {{ section.settings.color_footer_bg | color_darken: 10 }};
+  footer {
+      background-color: #fff;
+      line-height: normal;
+      padding: 0;
+      overflow: hidden;
+      position: relative
   }
 
-  .site-footer p,
-  .site-footer__linklist-item a,
-  .site-footer__rte a,
-  .site-footer h4,
-  .site-footer small,
-  .site-footer__copyright-content a,
-  .site-footer__newsletter-error,
-  .site-footer__social-icons .social-icons__link {
-    color: {{ section.settings.color_footer_text }};
+  footer a,footer div,footer p,footer section,footer ul {
+      letter-spacing: .09375rem;
+      font-family: futura-pt,Arial,sans-serif
   }
 
-  .site-footer {
-    color: {{ section.settings.color_footer_text }};
-    background-color: {{ section.settings.color_footer_bg }};
+  footer .value-propositions {
+      background-color: #000;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-bottom: 0
   }
 
-  .site-footer__rte a {
-    border-bottom: 1px solid {{ section.settings.color_footer_text }};
+  @media(min-width: 769px) {
+      footer .value-propositions {
+          -ms-flex-wrap:nowrap;
+          flex-wrap: nowrap
+      }
   }
 
-  .site-footer__rte a:hover,
-  .site-footer__linklist-item a:hover,
-  .site-footer__copyright-content a:hover {
-    color: {{ footer_text_color_hover }};
-    border-bottom: 1px solid {{ footer_text_color_hover }};
+  footer .value-propositions .value-proposition-item {
+      width: 100%;
+      border-bottom: .0625rem solid #000;
+      color: #fff;
+      text-align: center;
+      padding: 1.5625rem .9375rem 2.1875rem;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+      -ms-flex-pack: center;
+      justify-content: center;
+      line-height: normal
   }
 
-  .site-footer__social-icons .social-icons__link:hover {
-    color: {{ footer_text_color_hover }};
+  footer .value-propositions .value-proposition-item .proposition-icon-holder {
+      height: 2.375rem;
+      margin: auto .625rem auto auto;
+      width: 3.125rem
   }
+
+  footer .value-propositions .value-proposition-item .proposition-icon-holder>img,footer .value-propositions .value-proposition-item .proposition-icon-holder>svg {
+      margin-left: auto;
+      width: 100%;
+      height: auto;
+      max-width: 2.5rem
+  }
+
+  footer .value-propositions .value-proposition-item:last-child p>span {
+      display: block
+  }
+
+  @media(min-width: 769px) {
+      footer .value-propositions .value-proposition-item:last-child p>span {
+          display:none
+      }
+  }
+
+  footer .value-propositions .value-proposition-item .proposition-copy-wrap {
+      margin: auto;
+      margin-left: .625rem;
+      padding-top: .625rem
+  }
+
+  footer .value-propositions .value-proposition-item .proposition-copy-wrap>p {
+      font-size: .6875rem;
+      text-transform: uppercase;
+      max-width: 10.8125rem;
+      width: 100%;
+      margin: 0 auto;
+      text-align: left;
+      color: #fff;
+  }
+
+  @media(min-width: 769px) {
+      footer .value-propositions .value-proposition-item .proposition-copy-wrap>p {
+          max-width:11.25rem
+      }
+  }
+
+  @media(min-width: 769px) {
+      footer .value-propositions .value-proposition-item .proposition-copy-wrap {
+          padding-top:0;
+          margin-left: .3125rem
+      }
+  }
+
+  @media(min-width: 769px) {
+      footer .value-propositions .value-proposition-item {
+          width:25%;
+          border-right: .0625rem solid #000;
+          -ms-flex-pack: justify;
+          justify-content: space-between
+      }
+  }
+
+  footer>.container-fluid>.footer-container .footer-left-contents {
+      padding: 4rem 2rem 2.5rem
+  }
+
+  footer>.container-fluid>.footer-container .footer-left-contents>.social-links {
+      margin: 0
+  }
+
+  @media(max-width: 767.98px) {
+      footer>.container-fluid>.footer-container .footer-left-contents {
+          width:100%;
+          max-width: 100%;
+          -ms-flex-preferred-size: 100%;
+          flex-basis: 100%;
+          padding: 2rem 2rem .5rem;
+          text-align: center
+      }
+
+      footer>.container-fluid>.footer-container .footer-left-contents>.social-links {
+          display: none
+      }
+  }
+
+  footer>.container-fluid>.footer-container .footer-center-contents {
+      padding: 3.5rem 0 2.5rem
+  }
+
+  footer>.container-fluid>.footer-container .footer-center-contents>.row {
+      margin: 0
+  }
+
+  footer>.container-fluid>.footer-container .footer-center-contents .desktop-view {
+      display: block;
+      padding-left: 0
+  }
+
+  footer>.container-fluid>.footer-container .footer-center-contents .desktop-view .footer-item a .title {
+      margin-bottom: .625rem
+  }
+
+  footer>.container-fluid>.footer-container .footer-center-contents .mobile-view {
+      display: none
+  }
+
+  footer>.container-fluid>.footer-container .footer-center-contents .footer-item ul {
+      margin-top: 1rem;
+      margin-bottom: 0
+  }
+
+  footer>.container-fluid>.footer-container .footer-center-contents .footer-item ul li{
+      margin-bottom: 10px
+  }
+
+  footer>.container-fluid>.footer-container .footer-center-contents .footer-item .title {
+      position: relative;
+      text-decoration: none;
+      cursor: auto
+  }
+
+  footer>.container-fluid>.footer-container .footer-center-contents .footer-item .title,footer>.container-fluid>.footer-container .footer-center-contents .footer-item ul {
+      font-size: .75rem;
+      color: #000
+  }
+
+  @media(max-width: 767.98px) {
+      footer>.container-fluid>.footer-container .footer-center-contents {
+          padding:0;
+          width: 100%;
+          max-width: 100%;
+          -ms-flex-preferred-size: 100%;
+          flex-basis: 100%
+      }
+  }
+
+  footer>.container-fluid>.footer-container .footer-right-contents {
+      padding: 3.5rem 2rem 2.5rem
+  }
+
+  footer>.container-fluid>.footer-container .footer-right-contents .success_message {
+      font-size: .875rem;
+      color: #53c563;
+      padding-bottom: .9375rem
+  }
+
+  @media(min-width: 769px) and (max-width:991.98px) {
+      footer>.container-fluid>.footer-container .footer-right-contents {
+          padding:0 2rem 1.5rem
+      }
+  }
+
+  @media(max-width: 767.98px) {
+      footer>.container-fluid>.footer-container .footer-right-contents {
+          padding:1.5rem 2rem
+      }
+  }
+
+  footer>.container-fluid>.footer-container .company-info>.contact-items {
+      letter-spacing: 0;
+      font-size: .875rem;
+      line-height: 1.8;
+      color: #5c5c5c;
+      font-weight: 400;
+      margin: 1.25rem 0 .625rem
+  }
+
+  footer>.container-fluid>.footer-container .company-info>.contact-items li {
+      text-transform: capitalize
+  }
+
+  footer>.container-fluid>.footer-container .company-info>.contact-items li>a {
+      text-transform: lowercase;
+      color: #5c5c5c
+  }
+
+  footer>.container-fluid>.footer-container .social-links {
+      margin-bottom: 0;
+      max-width: 100%;
+      float: left
+  }
+
+  footer>.container-fluid>.footer-container .social-links>li {
+      margin: 0
+  }
+
+  footer>.container-fluid>.footer-container .social-links>li:first-child>a {
+      padding-left: 0
+  }
+
+  footer>.container-fluid>.footer-container .social-links>li>a {
+      display: block;
+      font-size: .875rem;
+      font-style: normal;
+      padding: .625rem;
+      transition: all .25s
+  }
+
+  footer>.container-fluid>.footer-container .social-links>li>a>i {
+      font-style: normal;
+      line-height: 1;
+      font-size: 1rem
+  }
+
+  footer>.container-fluid>.footer-container .social-links>li>a>.fa:hover {
+      color: #a40000
+  }
+
+  footer>.container-fluid>.footer-container .title,footer>.container-fluid>.footer-container ul {
+      text-transform: uppercase
+  }
+
+  footer .content li a.accessible-link {
+      position: static;
+      text-decoration: none
+  }
+
+  footer .content li a.accessible-link:hover {
+      color: #000;
+      text-decoration: underline
+  }
+
+  @media(max-width: 767.98px) {
+      footer>.container-fluid>.footer-container .footer-center-contents .row {
+          padding:0;
+          margin: 0
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .desktop-view {
+          display: none
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .mobile-view {
+          display: block;
+          padding: 0;
+          margin: 0
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .footer-item ul {
+          background: #fafafa;
+          margin: 0
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .footer-item ul>li {
+          font-size: .875rem;
+          height: auto
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .footer-item ul>li a {
+          color: #000;
+          text-decoration: none;
+          box-shadow: none;
+          outline: 0;
+          display: block;
+          padding: .9375rem 1.25rem;
+          font-size: .875rem
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .footer-item a {
+          letter-spacing: .125rem
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .footer-item .title {
+          font-size: .875rem;
+          padding: 1.125rem 1.25rem;
+          margin: 0;
+          border-top: .0625rem solid #f7f8f9;
+          border-bottom: 0;
+          background: #fff;
+          text-decoration: none;
+          display: block
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .footer-item .title:after {
+          float: right;
+          content: "";
+          background-image: url({{ 'footer-down-icon.svg' | asset_url }});
+          background-repeat: no-repeat;
+          color: #000;
+          position: absolute;
+          top: 1.75rem;
+          right: 1.25rem;
+          width: .6875rem;
+          height: .5rem;
+          transition: all .25s;
+          transform: perspective(400px) rotate3d(0,0,0,0)
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .footer-item.active .title:after {
+          margin-top: 0
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .footer-item:last-child .title {
+          border-bottom: .0625rem solid #f7f8f9
+      }
+
+      footer>.container-fluid>.footer-container .footer-center-contents .footer-item .title {
+          font-family: futura-pt,Arial,sans-serif;
+          font-weight: 500
+      }
+  }
+  .home-email-signup {
+    background-color: #fff;
+    margin: 0;
+  }
+
+  .home-email-signup>.container {
+      padding-top: .875rem;
+      padding-bottom: .875rem
+  }
+
+  .home-email-signup .email-description {
+      padding-top: .125rem;
+      color: #fff;
+      line-height: normal;
+      text-align: center;
+      font-weight: 500
+  }
+
+  .home-email-signup .form-control {
+      line-height: 1.375rem;
+      letter-spacing: 1px;
+      border-radius: 2px;
+      border-right: 0;
+      font-weight: 500;
+      height: 36px;
+      flex: 1 1 auto;
+      width: 1%;
+      background: transparent;
+      color: #fff !important;
+      outline: none;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border: 0;
+      font-size: 12px;
+  }
+
+  .home-email-signup .input-group-btn {
+      background: #fff;
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
+      padding-right: 1px;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000
+  }
+
+  .home-email-signup .input-group-btn .btn-primary {
+      letter-spacing: 2px;
+      font-family: futura-pt,Arial,sans-serif;
+      font-weight: 500;
+      line-height: 1.125rem;
+      margin-top: .0625rem
+  }
+
+  .home-email-signup .submission-status {
+      margin-top: .3125rem;
+      text-align: center
+  }
+
+  .home-email-signup .submission-status .success {
+      color: #fff
+  }
+
+  .home-email-signup .submission-status .error {
+      color: #a40000
+  }
+
+  @media(min-width: 544px) {
+      .home-email-signup .email-description {
+          padding-left:0;
+          font-size: 1rem
+      }
+
+      .home-email-signup .submission-status {
+          text-align: left
+      }
+  }
+
+  @media(min-width: 992px) {
+      .home-email-signup>.container {
+          max-width:950px
+      }
+
+      .home-email-signup>.container .email-description {
+          padding-top: .5625rem
+      }
+  }
+  .home-email-signup .email-description {
+    text-transform: uppercase;
+    color: #000;
+    line-height: 1;
+    text-align: left;
+    font-size: .75rem;
+    font-family: futura-pt,Arial,sans-serif;
+    margin-bottom: .9375rem;
+    letter-spacing: .14313rem;
+    padding: 0;
+  }
+  .home-email-signup .input-group {
+    max-width: 18.75rem;
+    background: #000;
+  }
+  .d-none {
+    display: none!important;
+  }
+  .home-email-signup .input-group .btn-primary {
+    letter-spacing: 0;
+    font-family: futura-pt,Arial,sans-serif;
+    font-weight: 400;
+    line-height: 0;
+    margin: 0;
+    padding: .375rem 1.0625rem;
+    box-shadow: inherit;
+    background: #000;
+  }
+  @media (max-width: 991.98px) {
+    .home-email-signup .input-group {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+  .footer .copyright {
+    margin: 0;
+    box-shadow: inset 0 0.0625rem 0 0 #f7f8f9;
+    text-align: center;
+    padding: 15px 0;
+  }  
+
+  .container{margin-right:auto;margin-left:auto;padding-right:15px;padding-left:15px;width:100%;}
+    @media(min-width:769px){.container{max-width:720px;}
+    }
+    @media(min-width:992px){.container{max-width:940px;}
+    }
+    @media(min-width:1280px){.container{max-width:1140px;}
+    }
+    .container-fluid{margin-right:auto;margin-left:auto;padding-right:15px;padding-left:15px;width:100%;}
+    .row{display:-ms-flexbox;display:flex;margin-right:-15px;margin-left:-15px;-ms-flex-wrap:wrap;flex-wrap:wrap;}
+    .no-gutters{margin-right:0;margin-left:0;}
+    .no-gutters>.col,.no-gutters>[class*=col-]{padding-right:0;padding-left:0;}
+    .col,.col-1,.col-10,.col-11,.col-12,.col-2,.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9,.col-auto,.col-lg,.col-lg-1,.col-lg-10,.col-lg-11,.col-lg-12,.col-lg-2,.col-lg-3,.col-lg-4,.col-lg-5,.col-lg-6,.col-lg-7,.col-lg-8,.col-lg-9,.col-lg-auto,.col-md,.col-md-1,.col-md-10,.col-md-11,.col-md-12,.col-md-2,.col-md-3,.col-md-4,.col-md-5,.col-md-6,.col-md-7,.col-md-8,.col-md-9,.col-md-auto,.col-md-down,.col-md-down-1,.col-md-down-10,.col-md-down-11,.col-md-down-12,.col-md-down-2,.col-md-down-3,.col-md-down-4,.col-md-down-5,.col-md-down-6,.col-md-down-7,.col-md-down-8,.col-md-down-9,.col-md-down-auto,.col-sm,.col-sm-1,.col-sm-10,.col-sm-11,.col-sm-12,.col-sm-2,.col-sm-3,.col-sm-4,.col-sm-5,.col-sm-6,.col-sm-7,.col-sm-8,.col-sm-9,.col-sm-auto,.col-xl,.col-xl-1,.col-xl-10,.col-xl-11,.col-xl-12,.col-xl-2,.col-xl-3,.col-xl-4,.col-xl-5,.col-xl-6,.col-xl-7,.col-xl-8,.col-xl-9,.col-xl-auto,.col-xl-custom,.col-xl-custom-1,.col-xl-custom-10,.col-xl-custom-11,.col-xl-custom-12,.col-xl-custom-2,.col-xl-custom-3,.col-xl-custom-4,.col-xl-custom-5,.col-xl-custom-6,.col-xl-custom-7,.col-xl-custom-8,.col-xl-custom-9,.col-xl-custom-auto,.col-xs,.col-xs-1,.col-xs-10,.col-xs-11,.col-xs-12,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-5,.col-xs-6,.col-xs-7,.col-xs-8,.col-xs-9,.col-xs-auto,.col-xxl,.col-xxl-1,.col-xxl-10,.col-xxl-11,.col-xxl-12,.col-xxl-2,.col-xxl-3,.col-xxl-4,.col-xxl-5,.col-xxl-6,.col-xxl-7,.col-xxl-8,.col-xxl-9,.col-xxl-auto{position:relative;padding-right:15px;padding-left:15px;width:100%;min-height:1px;}
+    .col{max-width:100%;-ms-flex-preferred-size:0;flex-basis:0;-ms-flex-positive:1;flex-grow:1;}
+    .col-auto{width:auto;max-width:none;-ms-flex:0 0 auto;flex:0 0 auto;}
+    .col-1{max-width:8.33333%;-ms-flex:0 0 8.33333%;flex:0 0 8.33333%;}
+    .col-2{max-width:16.66667%;-ms-flex:0 0 16.66667%;flex:0 0 16.66667%;}
+    .col-3{max-width:25%;-ms-flex:0 0 25%;flex:0 0 25%;}
+    .col-4{max-width:33.33333%;-ms-flex:0 0 33.33333%;flex:0 0 33.33333%;}
+    .col-5{max-width:41.66667%;-ms-flex:0 0 41.66667%;flex:0 0 41.66667%;}
+    .col-6{max-width:50%;-ms-flex:0 0 50%;flex:0 0 50%;}
+    .col-7{max-width:58.33333%;-ms-flex:0 0 58.33333%;flex:0 0 58.33333%;}
+    .col-8{max-width:66.66667%;-ms-flex:0 0 66.66667%;flex:0 0 66.66667%;}
+    .col-9{max-width:75%;-ms-flex:0 0 75%;flex:0 0 75%;}
+    .col-10{max-width:83.33333%;-ms-flex:0 0 83.33333%;flex:0 0 83.33333%;}
+    .col-11{max-width:91.66667%;-ms-flex:0 0 91.66667%;flex:0 0 91.66667%;}
+    .col-12{max-width:100%;-ms-flex:0 0 100%;flex:0 0 100%;}
+    .order-first{-ms-flex-order:-1;order:-1;}
+    .order-last{-ms-flex-order:13;order:13;}
+    .order-0{-ms-flex-order:0;order:0;}
+    .order-1{-ms-flex-order:1;order:1;}
+    .order-2{-ms-flex-order:2;order:2;}
+    .order-3{-ms-flex-order:3;order:3;}
+    .order-4{-ms-flex-order:4;order:4;}
+    .order-5{-ms-flex-order:5;order:5;}
+    .order-6{-ms-flex-order:6;order:6;}
+    .order-7{-ms-flex-order:7;order:7;}
+    .order-8{-ms-flex-order:8;order:8;}
+    .order-9{-ms-flex-order:9;order:9;}
+    .order-10{-ms-flex-order:10;order:10;}
+    .order-11{-ms-flex-order:11;order:11;}
+    .order-12{-ms-flex-order:12;order:12;}
+    .offset-1{margin-left:8.33333%;}
+    .offset-2{margin-left:16.66667%;}
+    .offset-3{margin-left:25%;}
+    .offset-4{margin-left:33.33333%;}
+    .offset-5{margin-left:41.66667%;}
+    .offset-6{margin-left:50%;}
+    .offset-7{margin-left:58.33333%;}
+    .offset-8{margin-left:66.66667%;}
+    .offset-9{margin-left:75%;}
+    .offset-10{margin-left:83.33333%;}
+    .offset-11{margin-left:91.66667%;}
+    @media(min-width:375){.col-xs{max-width:100%;-ms-flex-preferred-size:0;flex-basis:0;-ms-flex-positive:1;flex-grow:1;}
+    .col-xs-auto{width:auto;max-width:none;-ms-flex:0 0 auto;flex:0 0 auto;}
+    .col-xs-1{max-width:8.33333%;-ms-flex:0 0 8.33333%;flex:0 0 8.33333%;}
+    .col-xs-2{max-width:16.66667%;-ms-flex:0 0 16.66667%;flex:0 0 16.66667%;}
+    .col-xs-3{max-width:25%;-ms-flex:0 0 25%;flex:0 0 25%;}
+    .col-xs-4{max-width:33.33333%;-ms-flex:0 0 33.33333%;flex:0 0 33.33333%;}
+    .col-xs-5{max-width:41.66667%;-ms-flex:0 0 41.66667%;flex:0 0 41.66667%;}
+    .col-xs-6{max-width:50%;-ms-flex:0 0 50%;flex:0 0 50%;}
+    .col-xs-7{max-width:58.33333%;-ms-flex:0 0 58.33333%;flex:0 0 58.33333%;}
+    .col-xs-8{max-width:66.66667%;-ms-flex:0 0 66.66667%;flex:0 0 66.66667%;}
+    .col-xs-9{max-width:75%;-ms-flex:0 0 75%;flex:0 0 75%;}
+    .col-xs-10{max-width:83.33333%;-ms-flex:0 0 83.33333%;flex:0 0 83.33333%;}
+    .col-xs-11{max-width:91.66667%;-ms-flex:0 0 91.66667%;flex:0 0 91.66667%;}
+    .col-xs-12{max-width:100%;-ms-flex:0 0 100%;flex:0 0 100%;}
+    .order-xs-first{-ms-flex-order:-1;order:-1;}
+    .order-xs-last{-ms-flex-order:13;order:13;}
+    .order-xs-0{-ms-flex-order:0;order:0;}
+    .order-xs-1{-ms-flex-order:1;order:1;}
+    .order-xs-2{-ms-flex-order:2;order:2;}
+    .order-xs-3{-ms-flex-order:3;order:3;}
+    .order-xs-4{-ms-flex-order:4;order:4;}
+    .order-xs-5{-ms-flex-order:5;order:5;}
+    .order-xs-6{-ms-flex-order:6;order:6;}
+    .order-xs-7{-ms-flex-order:7;order:7;}
+    .order-xs-8{-ms-flex-order:8;order:8;}
+    .order-xs-9{-ms-flex-order:9;order:9;}
+    .order-xs-10{-ms-flex-order:10;order:10;}
+    .order-xs-11{-ms-flex-order:11;order:11;}
+    .order-xs-12{-ms-flex-order:12;order:12;}
+    .offset-xs-0{margin-left:0;}
+    .offset-xs-1{margin-left:8.33333%;}
+    .offset-xs-2{margin-left:16.66667%;}
+    .offset-xs-3{margin-left:25%;}
+    .offset-xs-4{margin-left:33.33333%;}
+    .offset-xs-5{margin-left:41.66667%;}
+    .offset-xs-6{margin-left:50%;}
+    .offset-xs-7{margin-left:58.33333%;}
+    .offset-xs-8{margin-left:66.66667%;}
+    .offset-xs-9{margin-left:75%;}
+    .offset-xs-10{margin-left:83.33333%;}
+    .offset-xs-11{margin-left:91.66667%;}
+    }
+    @media(min-width:544px){.col-sm{max-width:100%;-ms-flex-preferred-size:0;flex-basis:0;-ms-flex-positive:1;flex-grow:1;}
+    .col-sm-auto{width:auto;max-width:none;-ms-flex:0 0 auto;flex:0 0 auto;}
+    .col-sm-1{max-width:8.33333%;-ms-flex:0 0 8.33333%;flex:0 0 8.33333%;}
+    .col-sm-2{max-width:16.66667%;-ms-flex:0 0 16.66667%;flex:0 0 16.66667%;}
+    .col-sm-3{max-width:25%;-ms-flex:0 0 25%;flex:0 0 25%;}
+    .col-sm-4{max-width:33.33333%;-ms-flex:0 0 33.33333%;flex:0 0 33.33333%;}
+    .col-sm-5{max-width:41.66667%;-ms-flex:0 0 41.66667%;flex:0 0 41.66667%;}
+    .col-sm-6{max-width:50%;-ms-flex:0 0 50%;flex:0 0 50%;}
+    .col-sm-7{max-width:58.33333%;-ms-flex:0 0 58.33333%;flex:0 0 58.33333%;}
+    .col-sm-8{max-width:66.66667%;-ms-flex:0 0 66.66667%;flex:0 0 66.66667%;}
+    .col-sm-9{max-width:75%;-ms-flex:0 0 75%;flex:0 0 75%;}
+    .col-sm-10{max-width:83.33333%;-ms-flex:0 0 83.33333%;flex:0 0 83.33333%;}
+    .col-sm-11{max-width:91.66667%;-ms-flex:0 0 91.66667%;flex:0 0 91.66667%;}
+    .col-sm-12{max-width:100%;-ms-flex:0 0 100%;flex:0 0 100%;}
+    .order-sm-first{-ms-flex-order:-1;order:-1;}
+    .order-sm-last{-ms-flex-order:13;order:13;}
+    .order-sm-0{-ms-flex-order:0;order:0;}
+    .order-sm-1{-ms-flex-order:1;order:1;}
+    .order-sm-2{-ms-flex-order:2;order:2;}
+    .order-sm-3{-ms-flex-order:3;order:3;}
+    .order-sm-4{-ms-flex-order:4;order:4;}
+    .order-sm-5{-ms-flex-order:5;order:5;}
+    .order-sm-6{-ms-flex-order:6;order:6;}
+    .order-sm-7{-ms-flex-order:7;order:7;}
+    .order-sm-8{-ms-flex-order:8;order:8;}
+    .order-sm-9{-ms-flex-order:9;order:9;}
+    .order-sm-10{-ms-flex-order:10;order:10;}
+    .order-sm-11{-ms-flex-order:11;order:11;}
+    .order-sm-12{-ms-flex-order:12;order:12;}
+    .offset-sm-0{margin-left:0;}
+    .offset-sm-1{margin-left:8.33333%;}
+    .offset-sm-2{margin-left:16.66667%;}
+    .offset-sm-3{margin-left:25%;}
+    .offset-sm-4{margin-left:33.33333%;}
+    .offset-sm-5{margin-left:41.66667%;}
+    .offset-sm-6{margin-left:50%;}
+    .offset-sm-7{margin-left:58.33333%;}
+    .offset-sm-8{margin-left:66.66667%;}
+    .offset-sm-9{margin-left:75%;}
+    .offset-sm-10{margin-left:83.33333%;}
+    .offset-sm-11{margin-left:91.66667%;}
+    }
+    @media(min-width:768px){.col-md-down{max-width:100%;-ms-flex-preferred-size:0;flex-basis:0;-ms-flex-positive:1;flex-grow:1;}
+    .col-md-down-auto{width:auto;max-width:none;-ms-flex:0 0 auto;flex:0 0 auto;}
+    .col-md-down-1{max-width:8.33333%;-ms-flex:0 0 8.33333%;flex:0 0 8.33333%;}
+    .col-md-down-2{max-width:16.66667%;-ms-flex:0 0 16.66667%;flex:0 0 16.66667%;}
+    .col-md-down-3{max-width:25%;-ms-flex:0 0 25%;flex:0 0 25%;}
+    .col-md-down-4{max-width:33.33333%;-ms-flex:0 0 33.33333%;flex:0 0 33.33333%;}
+    .col-md-down-5{max-width:41.66667%;-ms-flex:0 0 41.66667%;flex:0 0 41.66667%;}
+    .col-md-down-6{max-width:50%;-ms-flex:0 0 50%;flex:0 0 50%;}
+    .col-md-down-7{max-width:58.33333%;-ms-flex:0 0 58.33333%;flex:0 0 58.33333%;}
+    .col-md-down-8{max-width:66.66667%;-ms-flex:0 0 66.66667%;flex:0 0 66.66667%;}
+    .col-md-down-9{max-width:75%;-ms-flex:0 0 75%;flex:0 0 75%;}
+    .col-md-down-10{max-width:83.33333%;-ms-flex:0 0 83.33333%;flex:0 0 83.33333%;}
+    .col-md-down-11{max-width:91.66667%;-ms-flex:0 0 91.66667%;flex:0 0 91.66667%;}
+    .col-md-down-12{max-width:100%;-ms-flex:0 0 100%;flex:0 0 100%;}
+    .order-md-down-first{-ms-flex-order:-1;order:-1;}
+    .order-md-down-last{-ms-flex-order:13;order:13;}
+    .order-md-down-0{-ms-flex-order:0;order:0;}
+    .order-md-down-1{-ms-flex-order:1;order:1;}
+    .order-md-down-2{-ms-flex-order:2;order:2;}
+    .order-md-down-3{-ms-flex-order:3;order:3;}
+    .order-md-down-4{-ms-flex-order:4;order:4;}
+    .order-md-down-5{-ms-flex-order:5;order:5;}
+    .order-md-down-6{-ms-flex-order:6;order:6;}
+    .order-md-down-7{-ms-flex-order:7;order:7;}
+    .order-md-down-8{-ms-flex-order:8;order:8;}
+    .order-md-down-9{-ms-flex-order:9;order:9;}
+    .order-md-down-10{-ms-flex-order:10;order:10;}
+    .order-md-down-11{-ms-flex-order:11;order:11;}
+    .order-md-down-12{-ms-flex-order:12;order:12;}
+    .offset-md-down-0{margin-left:0;}
+    .offset-md-down-1{margin-left:8.33333%;}
+    .offset-md-down-2{margin-left:16.66667%;}
+    .offset-md-down-3{margin-left:25%;}
+    .offset-md-down-4{margin-left:33.33333%;}
+    .offset-md-down-5{margin-left:41.66667%;}
+    .offset-md-down-6{margin-left:50%;}
+    .offset-md-down-7{margin-left:58.33333%;}
+    .offset-md-down-8{margin-left:66.66667%;}
+    .offset-md-down-9{margin-left:75%;}
+    .offset-md-down-10{margin-left:83.33333%;}
+    .offset-md-down-11{margin-left:91.66667%;}
+    }
+    @media(min-width:769px){.col-md{max-width:100%;-ms-flex-preferred-size:0;flex-basis:0;-ms-flex-positive:1;flex-grow:1;}
+    .col-md-auto{width:auto;max-width:none;-ms-flex:0 0 auto;flex:0 0 auto;}
+    .col-md-1{max-width:8.33333%;-ms-flex:0 0 8.33333%;flex:0 0 8.33333%;}
+    .col-md-2{max-width:16.66667%;-ms-flex:0 0 16.66667%;flex:0 0 16.66667%;}
+    .col-md-3{max-width:25%;-ms-flex:0 0 25%;flex:0 0 25%;}
+    .col-md-4{max-width:33.33333%;-ms-flex:0 0 33.33333%;flex:0 0 33.33333%;}
+    .col-md-5{max-width:41.66667%;-ms-flex:0 0 41.66667%;flex:0 0 41.66667%;}
+    .col-md-6{max-width:50%;-ms-flex:0 0 50%;flex:0 0 50%;}
+    .col-md-7{max-width:58.33333%;-ms-flex:0 0 58.33333%;flex:0 0 58.33333%;}
+    .col-md-8{max-width:66.66667%;-ms-flex:0 0 66.66667%;flex:0 0 66.66667%;}
+    .col-md-9{max-width:75%;-ms-flex:0 0 75%;flex:0 0 75%;}
+    .col-md-10{max-width:83.33333%;-ms-flex:0 0 83.33333%;flex:0 0 83.33333%;}
+    .col-md-11{max-width:91.66667%;-ms-flex:0 0 91.66667%;flex:0 0 91.66667%;}
+    .col-md-12{max-width:100%;-ms-flex:0 0 100%;flex:0 0 100%;}
+    .order-md-first{-ms-flex-order:-1;order:-1;}
+    .order-md-last{-ms-flex-order:13;order:13;}
+    .order-md-0{-ms-flex-order:0;order:0;}
+    .order-md-1{-ms-flex-order:1;order:1;}
+    .order-md-2{-ms-flex-order:2;order:2;}
+    .order-md-3{-ms-flex-order:3;order:3;}
+    .order-md-4{-ms-flex-order:4;order:4;}
+    .order-md-5{-ms-flex-order:5;order:5;}
+    .order-md-6{-ms-flex-order:6;order:6;}
+    .order-md-7{-ms-flex-order:7;order:7;}
+    .order-md-8{-ms-flex-order:8;order:8;}
+    .order-md-9{-ms-flex-order:9;order:9;}
+    .order-md-10{-ms-flex-order:10;order:10;}
+    .order-md-11{-ms-flex-order:11;order:11;}
+    .order-md-12{-ms-flex-order:12;order:12;}
+    .offset-md-0{margin-left:0;}
+    .offset-md-1{margin-left:8.33333%;}
+    .offset-md-2{margin-left:16.66667%;}
+    .offset-md-3{margin-left:25%;}
+    .offset-md-4{margin-left:33.33333%;}
+    .offset-md-5{margin-left:41.66667%;}
+    .offset-md-6{margin-left:50%;}
+    .offset-md-7{margin-left:58.33333%;}
+    .offset-md-8{margin-left:66.66667%;}
+    .offset-md-9{margin-left:75%;}
+    .offset-md-10{margin-left:83.33333%;}
+    .offset-md-11{margin-left:91.66667%;}
+    }
+    @media(min-width:992px){.col-lg{max-width:100%;-ms-flex-preferred-size:0;flex-basis:0;-ms-flex-positive:1;flex-grow:1;}
+    .col-lg-auto{width:auto;max-width:none;-ms-flex:0 0 auto;flex:0 0 auto;}
+    .col-lg-1{max-width:8.33333%;-ms-flex:0 0 8.33333%;flex:0 0 8.33333%;}
+    .col-lg-2{max-width:16.66667%;-ms-flex:0 0 16.66667%;flex:0 0 16.66667%;}
+    .col-lg-3{max-width:25%;-ms-flex:0 0 25%;flex:0 0 25%;}
+    .col-lg-4{max-width:33.33333%;-ms-flex:0 0 33.33333%;flex:0 0 33.33333%;}
+    .col-lg-5{max-width:41.66667%;-ms-flex:0 0 41.66667%;flex:0 0 41.66667%;}
+    .col-lg-6{max-width:50%;-ms-flex:0 0 50%;flex:0 0 50%;}
+    .col-lg-7{max-width:58.33333%;-ms-flex:0 0 58.33333%;flex:0 0 58.33333%;}
+    .col-lg-8{max-width:66.66667%;-ms-flex:0 0 66.66667%;flex:0 0 66.66667%;}
+    .col-lg-9{max-width:75%;-ms-flex:0 0 75%;flex:0 0 75%;}
+    .col-lg-10{max-width:83.33333%;-ms-flex:0 0 83.33333%;flex:0 0 83.33333%;}
+    .col-lg-11{max-width:91.66667%;-ms-flex:0 0 91.66667%;flex:0 0 91.66667%;}
+    .col-lg-12{max-width:100%;-ms-flex:0 0 100%;flex:0 0 100%;}
+    .order-lg-first{-ms-flex-order:-1;order:-1;}
+    .order-lg-last{-ms-flex-order:13;order:13;}
+    .order-lg-0{-ms-flex-order:0;order:0;}
+    .order-lg-1{-ms-flex-order:1;order:1;}
+    .order-lg-2{-ms-flex-order:2;order:2;}
+    .order-lg-3{-ms-flex-order:3;order:3;}
+    .order-lg-4{-ms-flex-order:4;order:4;}
+    .order-lg-5{-ms-flex-order:5;order:5;}
+    .order-lg-6{-ms-flex-order:6;order:6;}
+    .order-lg-7{-ms-flex-order:7;order:7;}
+    .order-lg-8{-ms-flex-order:8;order:8;}
+    .order-lg-9{-ms-flex-order:9;order:9;}
+    .order-lg-10{-ms-flex-order:10;order:10;}
+    .order-lg-11{-ms-flex-order:11;order:11;}
+    .order-lg-12{-ms-flex-order:12;order:12;}
+    .offset-lg-0{margin-left:0;}
+    .offset-lg-1{margin-left:8.33333%;}
+    .offset-lg-2{margin-left:16.66667%;}
+    .offset-lg-3{margin-left:25%;}
+    .offset-lg-4{margin-left:33.33333%;}
+    .offset-lg-5{margin-left:41.66667%;}
+    .offset-lg-6{margin-left:50%;}
+    .offset-lg-7{margin-left:58.33333%;}
+    .offset-lg-8{margin-left:66.66667%;}
+    .offset-lg-9{margin-left:75%;}
+    .offset-lg-10{margin-left:83.33333%;}
+    .offset-lg-11{margin-left:91.66667%;}
+    }
+    @media(min-width:1280px){.col-xl{max-width:100%;-ms-flex-preferred-size:0;flex-basis:0;-ms-flex-positive:1;flex-grow:1;}
+    .col-xl-auto{width:auto;max-width:none;-ms-flex:0 0 auto;flex:0 0 auto;}
+    .col-xl-1{max-width:8.33333%;-ms-flex:0 0 8.33333%;flex:0 0 8.33333%;}
+    .col-xl-2{max-width:16.66667%;-ms-flex:0 0 16.66667%;flex:0 0 16.66667%;}
+    .col-xl-3{max-width:25%;-ms-flex:0 0 25%;flex:0 0 25%;}
+    .col-xl-4{max-width:33.33333%;-ms-flex:0 0 33.33333%;flex:0 0 33.33333%;}
+    .col-xl-5{max-width:41.66667%;-ms-flex:0 0 41.66667%;flex:0 0 41.66667%;}
+    .col-xl-6{max-width:50%;-ms-flex:0 0 50%;flex:0 0 50%;}
+    .col-xl-7{max-width:58.33333%;-ms-flex:0 0 58.33333%;flex:0 0 58.33333%;}
+    .col-xl-8{max-width:66.66667%;-ms-flex:0 0 66.66667%;flex:0 0 66.66667%;}
+    .col-xl-9{max-width:75%;-ms-flex:0 0 75%;flex:0 0 75%;}
+    .col-xl-10{max-width:83.33333%;-ms-flex:0 0 83.33333%;flex:0 0 83.33333%;}
+    .col-xl-11{max-width:91.66667%;-ms-flex:0 0 91.66667%;flex:0 0 91.66667%;}
+    .col-xl-12{max-width:100%;-ms-flex:0 0 100%;flex:0 0 100%;}
+    .order-xl-first{-ms-flex-order:-1;order:-1;}
+    .order-xl-last{-ms-flex-order:13;order:13;}
+    .order-xl-0{-ms-flex-order:0;order:0;}
+    .order-xl-1{-ms-flex-order:1;order:1;}
+    .order-xl-2{-ms-flex-order:2;order:2;}
+    .order-xl-3{-ms-flex-order:3;order:3;}
+    .order-xl-4{-ms-flex-order:4;order:4;}
+    .order-xl-5{-ms-flex-order:5;order:5;}
+    .order-xl-6{-ms-flex-order:6;order:6;}
+    .order-xl-7{-ms-flex-order:7;order:7;}
+    .order-xl-8{-ms-flex-order:8;order:8;}
+    .order-xl-9{-ms-flex-order:9;order:9;}
+    .order-xl-10{-ms-flex-order:10;order:10;}
+    .order-xl-11{-ms-flex-order:11;order:11;}
+    .order-xl-12{-ms-flex-order:12;order:12;}
+    .offset-xl-0{margin-left:0;}
+    .offset-xl-1{margin-left:8.33333%;}
+    .offset-xl-2{margin-left:16.66667%;}
+    .offset-xl-3{margin-left:25%;}
+    .offset-xl-4{margin-left:33.33333%;}
+    .offset-xl-5{margin-left:41.66667%;}
+    .offset-xl-6{margin-left:50%;}
+    .offset-xl-7{margin-left:58.33333%;}
+    .offset-xl-8{margin-left:66.66667%;}
+    .offset-xl-9{margin-left:75%;}
+    .offset-xl-10{margin-left:83.33333%;}
+    .offset-xl-11{margin-left:91.66667%;}
+    }
+    @media(min-width:1440px){.col-xl-custom{max-width:100%;-ms-flex-preferred-size:0;flex-basis:0;-ms-flex-positive:1;flex-grow:1;}
+    .col-xl-custom-auto{width:auto;max-width:none;-ms-flex:0 0 auto;flex:0 0 auto;}
+    .col-xl-custom-1{max-width:8.33333%;-ms-flex:0 0 8.33333%;flex:0 0 8.33333%;}
+    .col-xl-custom-2{max-width:16.66667%;-ms-flex:0 0 16.66667%;flex:0 0 16.66667%;}
+    .col-xl-custom-3{max-width:25%;-ms-flex:0 0 25%;flex:0 0 25%;}
+    .col-xl-custom-4{max-width:33.33333%;-ms-flex:0 0 33.33333%;flex:0 0 33.33333%;}
+    .col-xl-custom-5{max-width:41.66667%;-ms-flex:0 0 41.66667%;flex:0 0 41.66667%;}
+    .col-xl-custom-6{max-width:50%;-ms-flex:0 0 50%;flex:0 0 50%;}
+    .col-xl-custom-7{max-width:58.33333%;-ms-flex:0 0 58.33333%;flex:0 0 58.33333%;}
+    .col-xl-custom-8{max-width:66.66667%;-ms-flex:0 0 66.66667%;flex:0 0 66.66667%;}
+    .col-xl-custom-9{max-width:75%;-ms-flex:0 0 75%;flex:0 0 75%;}
+    .col-xl-custom-10{max-width:83.33333%;-ms-flex:0 0 83.33333%;flex:0 0 83.33333%;}
+    .col-xl-custom-11{max-width:91.66667%;-ms-flex:0 0 91.66667%;flex:0 0 91.66667%;}
+    .col-xl-custom-12{max-width:100%;-ms-flex:0 0 100%;flex:0 0 100%;}
+    .order-xl-custom-first{-ms-flex-order:-1;order:-1;}
+    .order-xl-custom-last{-ms-flex-order:13;order:13;}
+    .order-xl-custom-0{-ms-flex-order:0;order:0;}
+    .order-xl-custom-1{-ms-flex-order:1;order:1;}
+    .order-xl-custom-2{-ms-flex-order:2;order:2;}
+    .order-xl-custom-3{-ms-flex-order:3;order:3;}
+    .order-xl-custom-4{-ms-flex-order:4;order:4;}
+    .order-xl-custom-5{-ms-flex-order:5;order:5;}
+    .order-xl-custom-6{-ms-flex-order:6;order:6;}
+    .order-xl-custom-7{-ms-flex-order:7;order:7;}
+    .order-xl-custom-8{-ms-flex-order:8;order:8;}
+    .order-xl-custom-9{-ms-flex-order:9;order:9;}
+    .order-xl-custom-10{-ms-flex-order:10;order:10;}
+    .order-xl-custom-11{-ms-flex-order:11;order:11;}
+    .order-xl-custom-12{-ms-flex-order:12;order:12;}
+    .offset-xl-custom-0{margin-left:0;}
+    .offset-xl-custom-1{margin-left:8.33333%;}
+    .offset-xl-custom-2{margin-left:16.66667%;}
+    .offset-xl-custom-3{margin-left:25%;}
+    .offset-xl-custom-4{margin-left:33.33333%;}
+    .offset-xl-custom-5{margin-left:41.66667%;}
+    .offset-xl-custom-6{margin-left:50%;}
+    .offset-xl-custom-7{margin-left:58.33333%;}
+    .offset-xl-custom-8{margin-left:66.66667%;}
+    .offset-xl-custom-9{margin-left:75%;}
+    .offset-xl-custom-10{margin-left:83.33333%;}
+    .offset-xl-custom-11{margin-left:91.66667%;}
+    }
+    @media(min-width:1920px){.col-xxl{max-width:100%;-ms-flex-preferred-size:0;flex-basis:0;-ms-flex-positive:1;flex-grow:1;}
+    .col-xxl-auto{width:auto;max-width:none;-ms-flex:0 0 auto;flex:0 0 auto;}
+    .col-xxl-1{max-width:8.33333%;-ms-flex:0 0 8.33333%;flex:0 0 8.33333%;}
+    .col-xxl-2{max-width:16.66667%;-ms-flex:0 0 16.66667%;flex:0 0 16.66667%;}
+    .col-xxl-3{max-width:25%;-ms-flex:0 0 25%;flex:0 0 25%;}
+    .col-xxl-4{max-width:33.33333%;-ms-flex:0 0 33.33333%;flex:0 0 33.33333%;}
+    .col-xxl-5{max-width:41.66667%;-ms-flex:0 0 41.66667%;flex:0 0 41.66667%;}
+    .col-xxl-6{max-width:50%;-ms-flex:0 0 50%;flex:0 0 50%;}
+    .col-xxl-7{max-width:58.33333%;-ms-flex:0 0 58.33333%;flex:0 0 58.33333%;}
+    .col-xxl-8{max-width:66.66667%;-ms-flex:0 0 66.66667%;flex:0 0 66.66667%;}
+    .col-xxl-9{max-width:75%;-ms-flex:0 0 75%;flex:0 0 75%;}
+    .col-xxl-10{max-width:83.33333%;-ms-flex:0 0 83.33333%;flex:0 0 83.33333%;}
+    .col-xxl-11{max-width:91.66667%;-ms-flex:0 0 91.66667%;flex:0 0 91.66667%;}
+    .col-xxl-12{max-width:100%;-ms-flex:0 0 100%;flex:0 0 100%;}
+    .order-xxl-first{-ms-flex-order:-1;order:-1;}
+    .order-xxl-last{-ms-flex-order:13;order:13;}
+    .order-xxl-0{-ms-flex-order:0;order:0;}
+    .order-xxl-1{-ms-flex-order:1;order:1;}
+    .order-xxl-2{-ms-flex-order:2;order:2;}
+    .order-xxl-3{-ms-flex-order:3;order:3;}
+    .order-xxl-4{-ms-flex-order:4;order:4;}
+    .order-xxl-5{-ms-flex-order:5;order:5;}
+    .order-xxl-6{-ms-flex-order:6;order:6;}
+    .order-xxl-7{-ms-flex-order:7;order:7;}
+    .order-xxl-8{-ms-flex-order:8;order:8;}
+    .order-xxl-9{-ms-flex-order:9;order:9;}
+    .order-xxl-10{-ms-flex-order:10;order:10;}
+    .order-xxl-11{-ms-flex-order:11;order:11;}
+    .order-xxl-12{-ms-flex-order:12;order:12;}
+    .offset-xxl-0{margin-left:0;}
+    .offset-xxl-1{margin-left:8.33333%;}
+    .offset-xxl-2{margin-left:16.66667%;}
+    .offset-xxl-3{margin-left:25%;}
+    .offset-xxl-4{margin-left:33.33333%;}
+    .offset-xxl-5{margin-left:41.66667%;}
+    .offset-xxl-6{margin-left:50%;}
+    .offset-xxl-7{margin-left:58.33333%;}
+    .offset-xxl-8{margin-left:66.66667%;}
+    .offset-xxl-9{margin-left:75%;}
+    .offset-xxl-10{margin-left:83.33333%;}
+    .offset-xxl-11{margin-left:91.66667%;}
+    }
+    .collapse:not(.show){ 
+      display: none;
+    }
 </style>
-
-
-{%- capture payment_icon_markup -%}
-  {%- if show_payment_icons -%}
-    <div class="grid__item site-footer__payment-icons">
-      <span class="visually-hidden">{{ 'general.payment.method' | t }}</span>
-      <ul class="payment-icons list--inline site-footer__icon-list">
-        {%- for type in shop.enabled_payment_types -%}
-          <li class="payment-icon">
-            {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
-          </li>
-        {%- endfor -%}
+<footer class="footer site-footer">
+  <div class="banner-with-contents">
+    <div class="content-asset">
+      <ul class="value-propositions">
+        <li class="value-proposition-item">
+          <div class="proposition-icon-holder">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 35 38">
+              <defs>
+              <path id="areoPlane" d="M26.9 38h-.2c-.3-.1-.5-.3-.6-.6l-4.8-15.2-4.8 5v7c0 .2-.1.5-.3.6l-2.6 2.8c-.2.2-.5.3-.8.3-.3 0-.5-.2-.7-.5l-3.7-7.8-7.5-3.9c-.3-.1-.4-.4-.5-.7 0-.3 0-.6.2-.8l2.6-2.8c.2-.2.4-.3.6-.3h6.7l4.8-5-14.4-5c-.3-.1-.5-.4-.6-.7-.1-.3 0-.6.2-.9l2.8-2.9c.2-.1.5-.2.7-.2l19 1.8 3-3.1c.5-.5 2.9-2.8 5.2-2.8.9 0 1.7.3 2.3 1 2 2.1.5 5.4-1.8 7.8l-3 3.1 1.7 19.9c0 .3-.1.5-.3.7l-2.8 2.9c.1.2-.2.3-.4.3zM2.8 24.6l6.6 3.5c.2.1.3.2.4.4l3.3 6.9 1.5-1.6v-7c0-.2.1-.5.3-.6l6.1-6.4c.2-.2.5-.3.8-.2.3.1.5.3.6.6l4.8 15.2 1.5-1.5L27 14c0-.3.1-.5.3-.7l3.3-3.5c1.4-1.4 3-4 1.8-5.2-.3-.3-.7-.5-1.1-.5-1.4 0-3.1 1.4-3.9 2.3l-3.3 3.5c-.2.2-.4.3-.7.3l-19-1.8-1.6 1.4 14.6 5.1c.3.1.5.4.6.7.1.3 0 .6-.2.9l-6.1 6.4c-.2.2-.4.3-.6.3H4.3l-1.5 1.4z"></path>
+              </defs>
+              <clipPath id="areoPlanePath">
+              <use xlink:href="#areoPlane" overflow="visible"></use>
+              </clipPath>
+              <path clip-path="url(#areoPlanePath)" fill="#fff" d="M-3.5-1.6h41.9v43.4H-3.5z"></path>
+            </svg>
+          </div>
+          <div class="proposition-copy-wrap">
+            <p>Free Shipping Worldwide</p>
+          </div>
+        </li>
+        <li class="value-proposition-item">
+          <div class="proposition-icon-holder">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 35 38">
+            <defs>
+            <path id="reset" d="M32.5 13.5c-1.8-4.1-5.1-7.2-9.3-8.8-4-1.7-8.6-1.5-12.7.3C4.8 7.6 1.1 13.1.7 19.4c-.1.3 0 .6.1.9 0 0 0 .1.1.1v.1c.3.5.8.8 1.4.8.9.1 1.7-.7 1.8-1.6.3-5 3.2-9.4 7.8-11.4 6.6-3.1 14.5-.1 17.5 6.7 3 6.7 0 14.7-6.6 17.7-2.7 1.2-5.8 1.5-8.6.8l.2-.3c.2-.3.2-.8-.1-1.1-.2-.3-.5-.5-.9-.5l-4.7.1c-.4 0-.7.2-.9.6-.2.3-.2.7 0 1l2.5 4.1c.2.3.6.6 1 .5.4 0 .7-.2.9-.5l.4-.7c1.6.5 3.4.8 5 .7 2.3 0 4.5-.5 6.6-1.4 4.1-1.9 7.2-5.2 8.7-9.4 1.7-4.4 1.5-9-.4-13.1"></path>
+            </defs>
+            <clipPath id="resetPath">
+            <use xlink:href="#reset" overflow="visible"></use>
+            </clipPath>
+            <path clip-path="url(#resetPath)" fill="#fcfcfc" d="M-3.1-.3h40.9v41.8H-3.1z"></path>
+            </svg>
+          </div>
+          <div class="proposition-copy-wrap">
+            <p>free returns worldwide <span class="utl--line-break temp-remove-shipping-intl">on orders over <span class="free-shippng-minimum">$50</span></span></p>
+          </div>
+        </li>
+        <li class="value-proposition-item">
+          <div class="proposition-icon-holder">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 35 38">
+            <defs>
+            <path id="a" d="M.7 4.5h33.2v32.4H.7z"></path>
+            </defs>
+            <clipPath id="b">
+            <use xlink:href="#a" overflow="visible"></use>
+            </clipPath>
+            <g clip-path="url(#b)">
+            <defs>
+            <path id="c" d="M0 3.8h34.6v33.9H0z"></path>
+            </defs>
+            <clipPath id="d">
+            <use xlink:href="#c" overflow="visible"></use>
+            </clipPath>
+            <g clip-path="url(#d)">
+            <defs>
+            <path id="e" d="M33.6 20.2l-2.7-1.9c-.4-.3-.5-.9-.3-1.3l1.6-2.9c.2-.4 0-.8-.4-.9l-3.3-.5c-.5-.1-.9-.5-.8-1l.2-3.3c0-.5-.3-.8-.8-.6l-3.2 1c-.5.1-1-.1-1.2-.6l-1.2-3.1c-.2-.5-.6-.6-1-.2L18 7.2c-.4.3-1 .3-1.3 0l-2.5-2.3c-.4-.3-.8-.2-1 .2L11.9 8c-.2.5-.7.7-1.2.6l-3.2-1c-.5-.1-.8.2-.8.7l.2 3.3c0 .5-.3 1-.8 1l-3.3.5c-.5.1-.7.5-.4.9L4 17c.2.4.1 1-.3 1.3L1 20.2c-.4.3-.4.7 0 1l2.7 1.9c.4.3.6.9.3 1.3l-1.6 2.9c-.2.4 0 .8.4.9l3.3.5c.5.1.9.5.8 1L6.7 33c0 .5.3.8.8.6l3.2-1c.5-.1 1 .1 1.2.6l1.2 3.1c.2.5.6.6 1 .2l2.5-2.3c.4-.3 1-.3 1.3 0l2.5 2.3c.4.3.8.2 1-.2l1.2-3.1c.2-.5.7-.7 1.2-.6l3.2 1c.5.1.8-.1.8-.6l-.2-3.3c0-.5.3-1 .8-1l3.3-.5c.5-.1.7-.5.4-.9l-1.6-2.9c-.2-.4-.1-1 .3-1.3l2.7-1.9c.5-.3.5-.8.1-1m-2.5 1L29 22.7c-.4.3-.5.9-.3 1.3l1.3 2.2c.2.4 0 .8-.4.9l-2.5.4c-.5.1-.9.5-.8 1l.2 2.6c0 .5-.3.8-.8.6L23 31c-.5-.1-1 .1-1.2.6l-1 2.4c-.2.5-.6.6-1 .2l-1.9-1.7c-.4-.3-1-.3-1.3 0l-1.9 1.7c-.4.3-.8.2-1-.2l-1-2.4c-.2-.5-.7-.7-1.2-.6l-2.5.7c-.5.1-.8-.1-.8-.6l.2-2.6c0-.5-.3-1-.8-1l-2.5-.4c-.5-.1-.7-.5-.4-.9L5.9 24c.2-.4.1-1-.3-1.3l-2.1-1.5c-.4-.3-.4-.7 0-1l2.1-1.5c.4-.3.5-.9.3-1.3l-1.3-2.2c-.2-.4 0-.8.4-.9l2.5-.4c.5-.1.9-.5.8-1l-.2-2.6c0-.5.3-.8.8-.6l2.5.7c.5.1 1-.1 1.2-.6l1-2.4c.2-.5.6-.6 1-.2l1.9 1.7c.4.3 1 .3 1.3 0l1.9-1.7c.4-.3.8-.2 1 .2l1 2.4c.2.5.7.7 1.2.6l2.5-.7c.5-.1.8.1.8.6l-.2 2.6c0 .5.3 1 .8 1l2.5.4c.5.1.7.5.4.9l-1.3 2.2c-.2.4-.1 1 .3 1.3l2.1 1.5c.7.2.7.7.3 1"></path>
+            </defs>
+            <clipPath id="f">
+            <use xlink:href="#e" overflow="visible"></use>
+            </clipPath>
+            <g clip-path="url(#f)">
+            <defs>
+            <path id="g" d="M.7 4.5h33.2V37H.7z"></path>
+            </defs>
+            <clipPath id="h">
+            <use xlink:href="#g" overflow="visible"></use>
+            </clipPath>
+            <path clip-path="url(#h)" fill="#fcfcfc" d="M-2.8 1h40.1v39.3H-2.8z"></path>
+            </g>
+            </g>
+            </g>
+            </svg>
+          </div>
+          <div class="proposition-copy-wrap">
+            <p>24 month warranty on <span>all products</span></p>
+          </div>
+        </li>
+        <li class="value-proposition-item">
+          <div class="proposition-icon-holder">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 35 38">
+            <defs>
+            <path id="security" d="M30.1 4.3c-.4-.3-1-.3-1.4-.1-6.4 3-9.1-.8-9.2-1-.3-.4-.7-.7-1.2-.7s-1 .3-1.2.7c-.1.2-2.8 4-9.2 1-.5-.2-1-.2-1.5.1-.4.3-.7.7-.7 1.3V20.3c.1.5 2.3 12.3 11.9 16.6.2.1.4.1.6.1.2 0 .4 0 .6-.1 9.6-4.2 11.8-16.1 11.9-16.6V5.6c.1-.6-.1-1-.6-1.3zm-2.2 15.6c-.2 1.1-2.4 10.4-9.6 14-7.2-3.6-9.4-12.9-9.6-14V7.7c4.5 1.4 7.8.1 9.6-1.5 1.8 1.6 5.1 2.9 9.6 1.5v12.2z"></path>
+            </defs>
+            <clipPath id="securityPath">
+            <use xlink:href="#security" overflow="visible"></use>
+            </clipPath>
+            <path clip-path="url(#securityPath)" fill="#fff" d="M1.4-1.8h33.7v43.1H1.4z"></path>
+            </svg>
+          </div>
+          <div class="proposition-copy-wrap">
+            <p>100% safe &amp; secure checkout <span>worry-free-purchases</span></p>
+          </div>
+        </li>
       </ul>
     </div>
-  {%- endif -%}
-{%- endcapture -%}
+  </div>
+  <div class="container-fluid page-width">
+    <div class="footer-container row">
+      <div class="footer-left-contents footer-item col-sm-4 col-lg-3">
+        <div class="content-asset">
+          <div class="company-info">
+            {% if section.settings.logo %}
+              {%- assign img_url = section.settings.logo | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <a href="{{ routes.root_url }}" class="footer-logo" data-image-loading-animation>
+                <img class="lazyload js"
+                     src="{{ section.settings.logo | img_url: '300x300' }}"
+                     data-src="{{ img_url }}"
+                     data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                     data-aspectratio="{{ section.settings.logo.aspect_ratio }}"
+                     data-sizes="auto"
+                     style="width: {{ section.settings.logo_max_width }}px">
+              </a>
+            {% endif %}
 
-<footer class="site-footer critical-hidden" role="contentinfo" data-section-id="{{ section.id }}" data-section-type="footer-section">
-  <div class="page-width">
-    <div class="site-footer__content">
-      {%- for block in section.blocks -%}
-
-        <div class="site-footer__item
-                    {% if section.blocks.size == 1 %} site-footer__item--center{% endif %}
-                    {{ footer_item }}
-                    {% if block.type == 'newsletter' and section.blocks.size == 3 %}site-footer-newsletter__one-half{% endif %}"
-             {{ block.shopify_attributes }}>
-          <div class="site-footer__item-inner site-footer__item-inner--{{ block.type }}">
-
-            {%- if block.settings.title -%}
-              <p class="h4">{{ block.settings.title | escape }}</p>
-            {%- endif -%}
-
-            {%- case block.type -%}
-              {%- when 'newsletter' -%}
-                <div class="site-footer__newsletter
-                          {% if section.blocks.size == 1 %} site-footer__single-block--centered{% endif %}">
-                  {%- assign formId = 'ContactFooter' -%}
-                  {% form 'customer', id: formId, novalidate: 'novalidate' %}
-                    {%- if form.posted_successfully? -%}
-                      <p class="form-message form-message--success" tabindex="-1" data-form-status>
-                        {{ 'general.newsletter_form.confirmation' | t }}
-                      </p>
-                    {%- endif -%}
-                    <input type="hidden" name="contact[tags]" value="newsletter">
-                    <div class="input-group {% if form.errors %} input-group--error{% endif %}">
-                      <input type="email"
-                        name="contact[email]"
-                        id="{{ formId }}-email"
-                        class="input-group__field newsletter__input{% if form.errors %} input--error{% endif %}"
-                        value="{{ form.email }}"
-                        placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
-                        aria-label="{{ 'general.newsletter_form.email_placeholder' | t }}"
-                        aria-required="true"
-                        required
-                        autocorrect="off"
-                        autocapitalize="off"
-                        {% if form.errors %}
-                          aria-invalid="true"
-                          aria-describedby="{{ formId }}-email-error"
-                          data-form-status
-                        {% endif %}>
-                      <span class="input-group__btn">
-                        <button type="submit" class="btn newsletter__submit" name="commit" >
-                          <span class="newsletter__submit-text--large">{{ 'general.newsletter_form.submit' | t }}</span>
-                        </button>
-                      </span>
-                    </div>
-                    {% if form.errors contains 'email' %}
-                      <span id="{{ formId }}-email-error" class="input-error-message">
-                        <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
-                        {% include 'icon-error' %}
-                        <span class="site-footer__newsletter-error">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</span>
-                      </span>
-                    {% endif %}
-                  {% endform %}
-                </div>
-
-              {%- when 'text' -%}
-                {%- if block.settings.text != blank -%}
-                  <div class="site-footer__rte
-                              {% if section.blocks.size == 1 %} site-footer__single-block--centered{% endif %}">
-                      {{ block.settings.text }}
-                  </div>
-                {%- endif -%}
-
-              {%- when 'link_list' -%}
-                {%- assign footer_linklist = block.settings.menu -%}
-                  <ul class="site-footer__linklist
-                            {% if inline_list %}list--inline{% endif %}">
-                    {%- for link in linklists[footer_linklist].links -%}
-                      <li class="site-footer__linklist-item">
-                        <a href="{{ link.url }}"
-                          {% if link.current %} aria-current="page"{% endif %}
-                        >
-                          {{ link.title | escape }}
-                        </a>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-
-            {%- endcase -%}
-
+            {% if section.settings.contact_email %}
+            <ul class="contact-items">
+              <li><a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a></li>
+            </ul>
+            {% endif %}
           </div>
         </div>
-      {%- endfor -%}
-    </div>
-  </div>
 
-  <hr class="site-footer__hr">
-
-  {%- assign socials = "Facebook Twitter Pinterest Instagram Tumblr Snapchat YouTube Vimeo" | split: ' ' -%}
-
-  <div class="page-width">
-    <div class="grid grid--no-gutters small--text-center grid--footer-float-right">
-      {%- if show_selectors -%}
-        <div class="grid__item one-half small--one-whole">
-          {%- form 'localization', class: 'selectors-form', data-disclosure-form: '' -%}
-            {%- if locale_selector -%}
-              <div class="selectors-form__item">
-                <h2 class="visually-hidden" id="lang-heading">
-                  {{ 'general.language.dropdown_label' | t }}
-                </h2>
-
-                <div class="disclosure" data-disclosure-locale>
-                  <button type="button" class="disclosure__toggle" aria-expanded="false" aria-controls="lang-list" aria-describedby="lang-heading" data-disclosure-toggle>
-                    {{ localization.language.endonym_name }}
-                  </button>
-                  <ul id="lang-list" class="disclosure-list" data-disclosure-list>
-                    {% for language in localization.available_languages %}
-                      <li class="disclosure-list__item {% if language.iso_code == localization.language.iso_code %}disclosure-list__item--current{% endif %}">
-                        <a class="disclosure-list__option" href="#" lang="{{ language.iso_code }}" {% if language.iso_code == localization.language.iso_code %}aria-current="true"{% endif %} data-value="{{ language.iso_code }}" data-disclosure-option>
-                          {{ language.endonym_name }}
-                        </a>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-                  <input type="hidden" name="locale_code" id="LocaleSelector" value="{{ form.current_locale.iso_code }}" data-disclosure-input/>
-                </div>
-              </div>
-            {%- endif -%}
-
-            {%- if country_selector -%}
-              <div class="selectors-form__item">
-                <h2 class="visually-hidden" id="country-heading">
-                  {{ 'general.country.dropdown_label' | t }}
-                </h2>
-                {%- assign current_currency_symbol = localization.country.currency.symbol -%}
-                {%- assign current_currency_iso_code = localization.country.currency.iso_code -%}
-                <div class="disclosure" data-disclosure-country>
-                  <button type="button" class="disclosure__toggle" aria-expanded="false" aria-controls="country-list" aria-describedby="country-heading" data-disclosure-toggle>
-                    {%- if current_currency_symbol -%}
-                      {{ localization.country.name }} ({{ current_currency_iso_code }} {{ current_currency_symbol }})
-                    {%- else -%}
-                      {{ localization.country.name }} ({{ current_currency_iso_code }})
-                    {%- endif -%}
-                  </button>
-                  <ul id="country-list" class="disclosure-list" data-disclosure-list>
-                    {% for country in form.available_countries %}
-                      {%- assign currency_symbol = country.currency.symbol -%}
-                      {%- assign currency_iso_code = country.currency.iso_code -%}
-                      <li class="disclosure-list__item {% if country.iso_code == localization.country.iso_code %}disclosure-list__item--current{% endif %}">
-                        <a class="disclosure-list__option" href="#" {% if country.iso_code == localization.country.iso_code %}aria-current="true"{% endif %} data-value="{{ country.iso_code }}" data-disclosure-option>
-                          {%- if currency_symbol -%}
-                            {{ country.name }} ({{ currency_iso_code }} {{ currency_symbol }})
-                          {%- else -%}
-                            {{ country.name }} ({{ currency_iso_code }})
-                          {%- endif -%}
-                        </a>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-                  <input type="hidden" name="country_code" id="CountrySelector" value="{{ localization.country.iso_code }}" data-disclosure-input/>
-                </div>
-              </div>
-            {%- endif -%}
-          {%- endform -%}
-        </div>
-      {%- else -%}
-        <div class="grid__item small--hide {{ payment_width_class }} {% if show_payment_icons %}site-footer-item-center-vertically{% endif %}">{{ payment_icon_markup }}</div>
-      {%- endif -%}
-
-      <div class="grid__item {% if show_selectors or show_payment_icons %}one-half{% endif %} small--one-whole site-footer-item-tall">
+        {%- assign social_icons = false -%}
+        {%- if
+          settings.social_twitter_link != blank
+          or settings.social_facebook_link != blank
+          or settings.social_pinterest_link != blank
+          or settings.social_instagram_link != blank
+          or settings.social_tumblr_link != blank
+          or settings.social_snapchat_link != blank
+          or settings.social_youtube_link != blank
+          or settings.social_vimeo_link != blank
+          or request.page_type == 'article'
+          or request.page_type == 'blog'
+        -%}
+          {%- assign social_icons = true -%}
+        {%- endif -%}
+        {%- assign socials = "Facebook Twitter Pinterest Instagram Tumblr Snapchat YouTube Vimeo" | split: ' ' -%}
         {%- if social_icons -%}
           <ul class="list--inline site-footer__social-icons social-icons site-footer__icon-list">
             {%- for social in socials -%}
@@ -319,46 +1014,71 @@
                 </li>
               {%- endif -%}
             {%- endfor -%}
-
-            {%- if request.page_type == 'blog' or request.page_type == 'article' -%}
-              <li>
-                <a class="social-icons__link" href="{{ shop.url }}{{ blog.url }}.atom">
-                  {% include 'icon-rss' %}
-                  <span class="icon__fallback-text">RSS</span>
-                </a>
-              </li>
-            {%- endif -%}
           </ul>
-        {%- else -%}
-          <div class="small--hide site-footer-item-align-right {% if show_selectors or show_payment_icons %}site-footer-item-center-vertically{% endif %}">
-            <small class="site-footer__copyright-content">&copy; {{ 'now' | date: "%Y" }}, {{ shop.name | link_to: routes.root_url }}</small>
-            <small class="site-footer__copyright-content site-footer__copyright-content-powered-by">{{ powered_by_link }}</small>
+        {% endif %}
+      </div>
+      <div class="footer-center-contents col-lg-6 col-sm-8">
+        <div class="row">
+          {%- for block in section.blocks -%}
+          <div class="footer-item grid__item medium-up--two-sixths desktop-view">
+            <div class="content-asset">
+              {%- if block.settings.title -%}
+              <a class="title" aria-expanded="false"><b>{{ block.settings.title | escape }}</b></a>
+              {%- endif -%}
+
+              {%- case block.type -%}
+                {%- when 'link_list' -%}
+                  {%- assign footer_linklist = block.settings.menu -%}
+                    <ul class="menu-footer content">
+                      {%- for link in linklists[footer_linklist].links -%}
+                       <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+                      {%- endfor -%}
+                    </ul>
+              {%- endcase -%}
+            </div>
           </div>
-        {%- endif -%}
+          {% endfor %}
+          {%- for block in section.blocks -%}
+          <div class="footer-item col-md-4 mobile-view">
+            <div class="content-asset">
+              {%- if block.settings.title -%}
+              <a class="title collapsed" href="#" data-toggle="collapse" role="button" data-target="#mens{{ forloop.index }}" id="mens{{ forloop.index }}heading{{ forloop.index }}" aria-expanded="false">{{ block.settings.title | escape }}</a>
+              {%- endif -%}
+              {%- case block.type -%}
+                {%- when 'link_list' -%}
+                  {%- assign footer_linklist = block.settings.menu -%}
+                    <ul class="collapse menu-footer content" id="mens{{ forloop.index }}" aria-labelledby="mens{{ forloop.index }}heading{{ forloop.index }}">
+                      {%- for link in linklists[footer_linklist].links -%}
+                       <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+                      {%- endfor -%}
+                    </ul>
+              {%- endcase -%}
+            </div> 
+          </div>
+          {% endfor %}
+        </div>
       </div>
 
-      {%- if show_selectors -%}
-        <div class="grid__item small--hide {{ payment_width_class }}">{{ payment_icon_markup }}</div>
-      {%- endif -%}
-
-      <div class="grid__item medium-up--hide {{ payment_width_class }} small--one-whole">{{ payment_icon_markup }}</div>
-
-      {%- if social_icons and show_selectors -%}
-        <div class="grid__item small--hide site-footer-item-align-right {% if show_payment_icons %}one-half{% endif %}">
-          <small class="site-footer__copyright-content">&copy; {{ 'now' | date: "%Y" }}, {{ shop.name | link_to: routes.root_url }}</small>
-          <small class="site-footer__copyright-content site-footer__copyright-content--powered-by">{{ powered_by_link }}</small>
+      <div class="col-lg-3 col-md-12 footer-item footer-right-contents home-email-signup">
+        <h4 class="email-description">Sign up for newsletter</h4>
+        <div class="submission-status d-none" data-errormsg="Please enter an email address">
+           Please enter an email address
         </div>
-      {%- endif -%}
-
-      <div class="grid__item small--one-whole {{ copyright_show_class }} site-footer-item-align-right">
-        <small class="site-footer__copyright-content">&copy; {{ 'now' | date: "%Y" }}, {{ shop.name | link_to: routes.root_url }}</small>
-        <small class="site-footer__copyright-content site-footer__copyright-content--powered-by">{{ powered_by_link }}</small>
+        <form role="form" name="newsletterSubscribe" id="newsletterSubscribe" action="" method="POST">
+          <div class="input-group">
+            <input type="text" class="form-control" id="hpEmailSignUp" name="hpEmailSignUp" placeholder="Enter your email address">
+            <button type="submit" class="btn btn-primary">
+              <img src="{{ 'newsLetterButtonSvg.svg' | asset_url }}" alt="Subscribe">
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+  <div class="copyright">
+    &copy; {{ 'now' | date: "%Y" }}, {{ shop.name | link_to: routes.root_url }}
+  </div>
 </footer>
-
-
 
 {% schema %}
 {
@@ -387,6 +1107,73 @@
   },
   "max_blocks": 4,
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": {
+        "cs": "Obrázek loga",
+        "da": "Logobillede",
+        "de": "Logo-Foto",
+        "en": "Logo image",
+        "es": "Logo",
+        "fi": "Logokuva",
+        "fr": "Image du logo",
+        "it": "Immagine del logo",
+        "ja": "ロゴ画像",
+        "ko": "로고 이미지",
+        "nb": "Logobilde",
+        "nl": "Afbeelding van logo",
+        "pl": "Obraz logo",
+        "pt-BR": "Imagem do logo",
+        "pt-PT": "Imagem do logótipo",
+        "sv": "Logobild",
+        "th": "รูปภาพโลโก้",
+        "tr": "Logo görseli",
+        "vi": "Hình ảnh logo",
+        "zh-CN": "logo 图片",
+        "zh-TW": "標誌圖片"
+      }
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "label": {
+        "cs": "Šířka vlastního loga",
+        "da": "Tilpasset logobredde",
+        "de": "Logobreite",
+        "en": "Custom logo width",
+        "es": "Ancho del logo personalizado",
+        "fi": "Mukautetun logon leveys",
+        "fr": "Largeur personnalisée du logo",
+        "it": "Larghezza logo personalizzato",
+        "ja": "ロゴの幅をカスタマイズする",
+        "ko": "사용자 지정 로고 폭",
+        "nb": "Tilpasset logobredde",
+        "nl": "Aangepaste logo-breedte",
+        "pl": "Niestandardowa szerokość logo",
+        "pt-BR": "Largura do logo personalizado",
+        "pt-PT": "Largura de logótipo personalizada",
+        "sv": "Anpassad logotypsbredd",
+        "th": "ความกว้างของโลโก้แบบกำหนดเอง",
+        "tr": "Özel logo genişliği",
+        "vi": "Chiều rộng logo tùy chỉnh",
+        "zh-CN": "自定义 logo 宽度",
+        "zh-TW": "自訂商標寬度"
+      },
+      "min": 50,
+      "max": 250,
+      "step": 5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": {
+        "zh-CN": "邮件地址",
+        "zh-TW": "邮件地址"
+      }
+    },
     {
       "type": "header",
       "content": {
@@ -522,160 +1309,6 @@
         "zh-TW": "文字"
       },
       "default": "#333232"
-    },
-    {
-      "type": "header",
-      "content": {
-        "cs": "Selektor jazyka",
-        "da": "Sprogvælger",
-        "de": "Sprachauswahl",
-        "en": "Language Selector",
-        "es": "Selector de idioma",
-        "fi": "Kielenvalitsin",
-        "fr": "Sélecteur de langue",
-        "it": "Selettore lingua",
-        "ja": "言語セレクター",
-        "ko": "언어 선택기",
-        "nb": "Språkvelger",
-        "nl": "Taalkiezer",
-        "pl": "Selektor języka",
-        "pt-BR": "Seletor de idiomas",
-        "pt-PT": "Seletor de Idioma",
-        "sv": "Språkväljare",
-        "th": "ตัวเลือกภาษา",
-        "tr": "Dil Seçici",
-        "vi": "Hộp chọn ngôn ngữ",
-        "zh-CN": "语言选择器",
-        "zh-TW": "語言選擇器"
-      },
-      "info": {
-        "cs": "Pokud chcete přidat jazyk, přejděte na [jazykové nastavení.](/admin/settings/languages)",
-        "da": "Du kan tilføje et sprog ved at gå til dine [sprogindstillinger.](/admin/settings/languages)",
-        "de": "Gehe zu deinen [Spracheinstellungen](/admin/settings/languages), um eine Sprache hinzuzufügen.",
-        "en": "To add a language, go to your [language settings.](/admin/settings/languages)",
-        "es": "Para agregar un idioma, ve a tu[configuración de idioma](/admin/settings/languages)",
-        "fi": "Lisää kieli siirtymällä [kieliasetuksiin.](/admin/settings/languages)",
-        "fr": "Pour ajouter une langue, allez dans vos [paramètres de langue.](/admin/settings/languages).",
-        "it": "Per aggiungere una lingua, vai su [impostazioni della lingua.](/admin/settings/languages)",
-        "ja": "言語を追加するには、[言語設定](/admin/settings/languages) に移動します。",
-        "ko": "언어를 추가하려면 [언어 설정.](/admin/settings/languages)(으)로 이동하십시오.",
-        "nb": "For å legge til et språk, går du til dine [språkinnstillinger.](/admin/settings/languages)",
-        "nl": "Ga naar je [taalinstellingen.](/admin/settings/languages) om een taal toe te voegen.",
-        "pl": "Aby dodać język, przejdź do swoich [ustawień języka.](/admin/settings/languages)",
-        "pt-BR": "Para adicionar um idioma, acesse suas [configurações de idioma. ](/admin/settings/languages)",
-        "pt-PT": "Para adicionar um idioma, aceda a [definições de idioma.](/admin/settings/languages)",
-        "sv": "För att lägga till ett språk, gå till dina [språkinställningar.](/admin/settings/languages)",
-        "th": "หากต้องการเพิ่มภาษา ให้ไปที่ [การตั้งค่าภาษา ](/admin/settings/languages) ของคุณ",
-        "tr": "Dil eklemek için [dil ayarları](/admin/settings/languages) bölümünüze gidin.",
-        "vi": "Để thêm ngôn ngữ, mở [cài đặt ngôn ngữ.](/admin/settings/languages)",
-        "zh-CN": "若要添加语言，请转到您的 [语言设置。](/admin/settings/languages)",
-        "zh-TW": "若要新增語言，請前往 [語言設定。](/admin/settings/languages)"
-      }
-    },
-    {
-      "type": "checkbox",
-      "id": "show_locale_selector",
-      "label": {
-        "cs": "Zobrazit selektor jazyka",
-        "da": "Vis sprogvælger",
-        "de": "Sprachauswahl anzeigen",
-        "en": "Show language selector",
-        "es": "Mostrar el selector de idioma",
-        "fi": "Näytä kielenvalitsin",
-        "fr": "Afficher le sélecteur de langue",
-        "it": "Mostra selettore lingua",
-        "ja": "言語セレクターを表示する",
-        "ko": "언어 선택기 표시",
-        "nb": "Vis språkvelger",
-        "nl": "Taalkiezer weergeven",
-        "pl": "Pokaż selektor języka",
-        "pt-BR": "Exibir seletor de idioma",
-        "pt-PT": "Mostrar seletor de idioma",
-        "sv": "Visa språkväljare",
-        "th": "แสดงตัวเลือกภาษา",
-        "tr": "Dil seçiciyi göster",
-        "vi": "Hiển thị hộp chọn ngôn ngữ",
-        "zh-CN": "显示语言选择器",
-        "zh-TW": "顯示語言選擇器"
-      },
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": {
-        "cs": "Selektor země/oblasti",
-        "da": "Land/område-vælger",
-        "de": "Auswahl für Land/Region",
-        "en": "Country/region Selector",
-        "es": "Selector de país/región",
-        "fi": "Maa-/aluevalitsin",
-        "fr": "Sélecteur de pays/région",
-        "it": "Selettore paese/regione",
-        "ja": "国/地域セレクター",
-        "ko": "국가/지역 선택기",
-        "nb": "Land-/regionvelger",
-        "nl": "Kiezer voor land/regio",
-        "pl": "Selektor kraju/regionu",
-        "pt-BR": "Seletor de país/região",
-        "pt-PT": "Seletor de país/região",
-        "sv": "Land/region-väljare",
-        "th": "ตัวเลือกประเทศ/ภูมิภาค",
-        "tr": "Ülke/Bölge Seçici",
-        "vi": "Hộp chọn quốc gia/vùng",
-        "zh-CN": "国家/地区选择器",
-        "zh-TW": "國家/地區選擇器"
-      },
-      "info": {
-        "cs": "Pokud chcete přidat zemi nebo oblast, přejděte na [nastavení plateb.](/admin/settings/payments)",
-        "da": "For at tilføje et land/område skal du gå til dine [betalingsindstillinger.](/admin/settings/payments)",
-        "de": "Gehe zu deinen [Zahlungseinstellungen](/admin/settings/payments), um ein Land/eine Region hinzuzufügen.",
-        "en": "To add a country/region, go to your [payment settings.](/admin/settings/payments)",
-        "es": "Para agregar una país/región, ve a tu [configuración de pago.](/admin/settings/payments)",
-        "fi": "Lisää maa/alue siirtymällä omiin [maksuasetuksiisi.](/admin/settings/payments)",
-        "fr": "Pour ajouter un pays/une région, allez dans vos [paramètres de paiement.](/admin/settings/payments)",
-        "it": "Per aggiungere un paese/regione, vai a [impostazioni pagamento.](/admin/settings/payments)",
-        "ja": "国/地域を追加するには、[決済設定](/admin/settings/payments) に移動します。",
-        "ko": "국가/지역을 추가하려면 [결제 설정](/admin/settings/payments)(으)로 이동하십시오.",
-        "nb": "For å legge til et land/region må du gå til [betalingsinnstillingene.](/admin/settings/payments)",
-        "nl": "Ga naar je [betaalinstellingen.](/admin/settings/payments) om een land/regio toe te voegen.",
-        "pl": "Aby dodać kraj/region, przejdź do swoich [ustawień płatności.](/admin/settings/payments)",
-        "pt-BR": "Para adicionar um país/região, acesse as [configurações de pagamento.](/admin/settings/payments)",
-        "pt-PT": "Para adicionar um país/região, aceda às [definições de pagamento.](/admin/settings/payments)",
-        "sv": "För att lägga till land/region går du till dina [betalningsinställningar.](/admin/settings/payments)",
-        "th": "หากต้องการเพิ่มประเทศ/ภูมิภาค ให้ไปที่ [การตั้งค่าการชำระเงิน](/admin/settings/payments)",
-        "tr": "Ülke/bölge eklemek için [ödeme ayarlarınıza](/admin/settings/payments) gidin.",
-        "vi": "Để thêm quốc gia/vùng, vào [cài đặt thanh toán.](/admin/settings/payments)",
-        "zh-CN": "若要添加国家/地区，请转到 [支付设置。](/admin/settings/payments)",
-        "zh-TW": "若要新增國家/地區，請前往 [付款設定。](/admin/settings/payments)"
-      }
-    },
-    {
-      "type": "checkbox",
-      "id": "show_currency_selector",
-      "label": {
-        "cs": "Zobrazit selektor země/oblasti",
-        "da": "Vis land/område-vælger",
-        "de": "Auswahl für Land/Region anzeigen",
-        "en": "Show country/region selector",
-        "es": "Mostrar selector de país/región",
-        "fi": "Näytä maa-/aluevalitsin",
-        "fr": "Afficher le sélecteur de pays/région",
-        "it": "Mostra selettore paese/regione",
-        "ja": "国/地域セレクターを表示する",
-        "ko": "국가/지역 선택기 표시",
-        "nb": "Vis land-/regionvelger",
-        "nl": "Kiezer voor land/regio weergeven",
-        "pl": "Pokaż selektor kraju/regionu",
-        "pt-BR": "Exibir seletor de país/região",
-        "pt-PT": "Mostrar seletor de país/região",
-        "sv": "Visa land/region-väljare",
-        "th": "แสดงตัวเลือกประเทศ/ภูมิภาค",
-        "tr": "Ülke/bölge seçiciyi göster",
-        "vi": "Hiển thị hộp chọn quốc gia/vùng",
-        "zh-CN": "显示国家/地区选择器",
-        "zh-TW": "顯示國家/地區選擇器"
-      },
-      "default": true
     }
   ],
   "blocks": [
@@ -782,236 +1415,6 @@
             "zh-TW": "選單"
           },
           "default": "footer"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "name": {
-        "cs": "Text",
-        "da": "Tekst",
-        "de": "Text",
-        "en": "Text",
-        "es": "Texto",
-        "fi": "Teksti",
-        "fr": "Texte",
-        "it": "Testo",
-        "ja": "テキスト",
-        "ko": "텍스트",
-        "nb": "Tekst",
-        "nl": "Tekst",
-        "pl": "Tekst",
-        "pt-BR": "Texto",
-        "pt-PT": "Texto",
-        "sv": "Text",
-        "th": "ข้อความ",
-        "tr": "Metin",
-        "vi": "Văn bản",
-        "zh-CN": "文本",
-        "zh-TW": "文字"
-      },
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": {
-            "cs": "Nadpis",
-            "da": "Overskrift",
-            "de": "Überschrift",
-            "en": "Heading",
-            "es": "Título",
-            "fi": "Otsake",
-            "fr": "Titre",
-            "it": "Heading",
-            "ja": "見出し",
-            "ko": "제목",
-            "nb": "Overskrift",
-            "nl": "Kop",
-            "pl": "Nagłówek",
-            "pt-BR": "Título",
-            "pt-PT": "Título",
-            "sv": "Rubrik",
-            "th": "ส่วนหัว",
-            "tr": "Başlık",
-            "vi": "Tiêu đề",
-            "zh-CN": "标题",
-            "zh-TW": "標題"
-          },
-          "default": {
-            "cs": "Informujte o svém obchodu",
-            "da": "Fortæl om din virksomhed",
-            "de": "Rede über dein Unternehmen",
-            "en": "Talk about your business",
-            "es": "Habla sobre tu negocio",
-            "fi": "Kerro yrityksestäsi",
-            "fr": "Parlez de votre entreprise",
-            "it": "Parla della tua attività commerciale",
-            "ja": "あなたのビジネスについて語る",
-            "ko": "비즈니스에 대한 이야기하기",
-            "nb": "Snakk om bedriften din",
-            "nl": "Vertel over je bedrijf",
-            "pl": "Opowiedz o swojej firmie",
-            "pt-BR": "Fale sobre o seu negócio",
-            "pt-PT": "Fale sobre o seu negócio",
-            "sv": "Prata om ditt företag",
-            "th": "พูดถึงธุรกิจของคุณ",
-            "tr": "İşletmenizden bahsedin",
-            "vi": "Chia sẻ về doanh nghiệp của bạn",
-            "zh-CN": "介绍您的业务",
-            "zh-TW": "描述您的商家"
-          }
-        },
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": {
-            "cs": "Text",
-            "da": "Tekst",
-            "de": "Text",
-            "en": "Text",
-            "es": "Texto",
-            "fi": "Teksti",
-            "fr": "Texte",
-            "it": "Testo",
-            "ja": "テキスト",
-            "ko": "텍스트",
-            "nb": "Tekst",
-            "nl": "Tekst",
-            "pl": "Tekst",
-            "pt-BR": "Texto",
-            "pt-PT": "Texto",
-            "sv": "Text",
-            "th": "ข้อความ",
-            "tr": "Metin",
-            "vi": "Văn bản",
-            "zh-CN": "文本",
-            "zh-TW": "文字"
-          },
-          "default": {
-            "cs": "<p>Popište zákazníkům podrobně svůj obchod, propagační akce nebo značky nabízeného zboží.</p>",
-            "da": "<p>Del butiksoplysninger, reklamer eller brandindhold med dine kunder.</p>",
-            "de": "<p>Teile deine Shop-Details, Werbeaktionen oder Markeninhalte mit deinen Kunden.</p>",
-            "en": "<p>Share store details, promotions, or brand content with your customers.</p>",
-            "es": "<p>Comparte detalles de la tienda, promociones o contenido de la marca con tus clientes.</p>",
-            "fi": "<p>Jaa myymälän tiedot, tarjoukset tai brändin sisältö asiakkaittesi kanssa.</p>",
-            "fr": "<p>Partagez les détails de la boutique, les promotions ou le contenu de la marque avec vos clients.</p>",
-            "it": "<p>Condividi dettagli del negozio, promozioni o contenuti del brand con i clienti.</p>",
-            "ja": "<p>ストア詳細、プロモーション、ブランドのコンテンツをお客様と共有する。</p>",
-            "ko": "<p>스토어 세부 정보, 프로모션 또는 브랜드 콘텐츠를 고객과 공유하십시오.</p>",
-            "nb": "<p>Del butikkdetaljer, kampanjer eller merkevareinnhold med kundene dine.</p>",
-            "nl": "<p>Deel winkeldetails, promoties of merkcontent met je klanten.</p>",
-            "pl": "<p>Poinformuj swoich klientów o sklepie, promocjach lub zawartości marki.</p>",
-            "pt-BR": "<p>Compartilhe informações da loja, promoções ou conteúdo da marca com seus clientes.</p>",
-            "pt-PT": "<p>Partilhe detalhes da loja, promoções ou conteúdo de marca com os seus clientes.</p>",
-            "sv": "<p>Dela butikens detaljer, kampanjer eller varumärkesinnehåll med dina kunder.</p>",
-            "th": "<p>แชร์รายละเอียดร้านค้า โปรโมชัน หรือเนื้อหาแบรนด์กับลูกค้าของคุณ</p>",
-            "tr": "<p>Mağaza ayrıntılarını, promosyonları, marka içeriğini müşterilerinizle paylaşın.</p>",
-            "vi": "<p>Chia sẻ thông tin cửa hàng, khuyến mãi hoặc nội dung thương hiệu với khách hàng.</p>",
-            "zh-CN": "<p>与您的客户共享商店详细信息、促销信息或品牌内容。</p>",
-            "zh-TW": "<p>與顧客分享商店的詳細資訊、宣傳活動或品牌內容。</p>"
-          }
-        }
-      ]
-    },
-    {
-      "type": "newsletter",
-      "limit": 1,
-      "name": {
-        "cs": "Přihlášení k odběru novinek",
-        "da": "Tilmelding til nyhedsbrev",
-        "de": "Newsletter-Anmeldung",
-        "en": "Newsletter signup",
-        "es": "Suscripción al boletín",
-        "fi": "Uutiskirjeen tilaus",
-        "fr": "Inscription",
-        "it": "Iscriviti alla Newsletter",
-        "ja": "ニュースレターの登録",
-        "ko": "뉴스레터 신청",
-        "nb": "Registrering for nyhetsbrev",
-        "nl": "Nieuwsbriefaanmelding",
-        "pl": "Rejestracja do newslettera",
-        "pt-BR": "Assinatura da newsletter",
-        "pt-PT": "Registo na newsletter",
-        "sv": "Nyhetsbrevsregistrering",
-        "th": "การสมัครรับจดหมายข่าว",
-        "tr": "Bülten aboneliği",
-        "vi": "Đăng ký nhận bản tin",
-        "zh-CN": "新闻通讯注册",
-        "zh-TW": "訂閱電子報"
-      },
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": {
-            "cs": "Nadpis",
-            "da": "Overskrift",
-            "de": "Überschrift",
-            "en": "Heading",
-            "es": "Título",
-            "fi": "Otsake",
-            "fr": "Titre",
-            "it": "Heading",
-            "ja": "見出し",
-            "ko": "제목",
-            "nb": "Overskrift",
-            "nl": "Kop",
-            "pl": "Nagłówek",
-            "pt-BR": "Título",
-            "pt-PT": "Título",
-            "sv": "Rubrik",
-            "th": "ส่วนหัว",
-            "tr": "Başlık",
-            "vi": "Tiêu đề",
-            "zh-CN": "标题",
-            "zh-TW": "標題"
-          },
-          "info": {
-            "cs": "Odběratelé budou přidáni do vašeho [seznamu zákazníků, kteří přijímají marketing.](/admin/customers?query=&accepts_marketing=1)",
-            "da": "Abonnenter bliver føjet til [kundelisten](/admin/customers?query=&accepts_marketing=1) for \"accepterer markedsføring\".",
-            "de": "Abonnenten werden zu deiner Liste „akzeptiert Marketingmaterial“ hinzugefügt [Kundenliste.](/admin/customers?query=&accepts_marketing=1)",
-            "en": "Subscribers will be added to your “accepts marketing” [customer list.](/admin/customers?query=&accepts_marketing=1)",
-            "es": "Se añadirá los suscriptores a tu [lista de clientes.](/admin/customers?query=&accepts_marketing=1) \"acepta marketing\".",
-            "fi": "Tilaajat lisätään \"hyväksyy markkinointi\" [-asiakasluetteloosi. ](/admin/customers?query=&accepts_marketing=1)",
-            "fr": "Les abonnés seront ajoutés à votre [liste de clients](/admin/customers?query=&accepts_marketing=1) « Accepte le marketing ».",
-            "it": "Gli iscritti verranno aggiunti al tuo [elenco clienti.](/admin/customers?query=&accepts_marketing=1) «accetta marketing»",
-            "ja": "購読者は「マーケティングを受け入れる」[顧客リスト](/admin/customers?query=&accepts_marketing=1) に追加されます。",
-            "ko": "가입자가 \"마케팅 수락\" [고객 목록.](/admin/customers?query=&accepts_marketing=1)에 추가됩니다.",
-            "nb": "Abonnenter vil bli lagt til i «aksepterer markedsføring» [kundeliste.](/admin/customers?query=&accepts_marketing=1)",
-            "nl": "Abonnees worden toegevoegd aan je \"accepteert marketing\" [klantenlijst.](/admin/customers?query=&accepts_marketing=1)",
-            "pl": "Subskrybenci zostaną dodani do Twojej [listy klientów \"akceptujących marketing\".](/admin/customers?query=&accepts_marketing=1)",
-            "pt-BR": "Os assinantes serão adicionados à “aceita marketing” [lista de clientes. ](/admin/customers?query=&accepts_marketing=1)",
-            "pt-PT": "Os subscritores serão adicionados à sua lista de \"aceitam marketing\" [lista de clientes.](/admin/customers?query=&accepts_marketing=1)",
-            "sv": "Prenumeranter läggs till i din \"accepterar marknadsföring\" [kundlista. ](/admin/customers?query=&accepts_marketing=1)",
-            "th": "ระบบจะเพิ่มผู้สมัครใช้งานไปยังส่วน “ยอมรับการตลาด” ของคุณ [รายชื่อลูกค้า](/admin/customers?query=&accepts_marketing=1)",
-            "tr": "Aboneler \"pazarlama kabul ediyor\" [müşteri listenize](/admin/customers?query=&accepts_marketing=1) eklenir.",
-            "vi": "Người đăng ký sẽ được thêm vào [danh sách khách hàng](/admin/customers?query=&accepts_marketing=1) \"chấp nhận tiếp thị\".",
-            "zh-CN": "订阅者将被添加到您的“接受营销”[客户列表](/admin/customers?query=&accepts_marketing=1)中。",
-            "zh-TW": "系統會將訂閱者新增至您的「接受行銷」[客戶清單。](/admin/customers?query=&accepts_marketing=1)"
-          },
-          "default": {
-            "cs": "Novinky",
-            "da": "Nyhedsbrev",
-            "de": "Newsletter",
-            "en": "Newsletter",
-            "es": "Boletín",
-            "fi": "Uutiskirje",
-            "fr": "Newsletter",
-            "it": "Newsletter",
-            "ja": "ニュースレター",
-            "ko": "뉴스레터",
-            "nb": "Nyhetsbrev",
-            "nl": "Nieuwsbrief",
-            "pl": "Newsletter",
-            "pt-BR": "Newsletter",
-            "pt-PT": "Newsletter",
-            "sv": "Nyhetsbrev",
-            "th": "จดหมายข่าว",
-            "tr": "Bülten",
-            "vi": "Bản tin",
-            "zh-CN": "新闻通讯",
-            "zh-TW": "電子報"
-          }
         }
       ]
     }
