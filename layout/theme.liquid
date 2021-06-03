@@ -260,6 +260,13 @@
         $(this).parents(".page-width").find("ul").eq(index).show().siblings("ul").hide();
       })
 
+      // 菜单导航切换功能
+      $(".menu-pane li a").on("mouseover", function(e) {
+        var index = $(this).parent().index();
+        $(this).parent().addClass("active").siblings().removeClass('active');
+        $(this).parents(".menu-content").find(".submenu .submenu-container").eq(index).addClass('active').siblings().removeClass('active');
+      })
+
 
       // 商品详情页also like
       // $(".gallery-slider").slick({
